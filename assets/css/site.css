@@ -138,7 +138,9 @@ img { display: block; max-width: 100%; height: auto; }
   flex: none;
   width: clamp(46px, 9vw, 68px);
   aspect-ratio: 1;
-  background: var(--accent);
+  /* Text colour, not the accent: that is the cream the mark is drawn in on the
+     game splash screens, and it keeps the mark readable on paper too. */
+  background: var(--ink);
   -webkit-mask: url("../brand/logo-mark.png") center / contain no-repeat;
   mask: url("../brand/logo-mark.png") center / contain no-repeat;
 }
