@@ -31,6 +31,7 @@
   --line: #e3dcd0;
   --accent: #a94f28;
   --accent-soft: #f2e4d9;
+  --code-bg: #f1ebe1;
   --shadow: 0 1px 2px rgba(40, 30, 16, .05), 0 12px 28px -18px rgba(40, 30, 16, .35);
   --grain: .035;
   --display: "Fraunces", Georgia, "Times New Roman", serif;
@@ -48,6 +49,7 @@
     --line: #2e2922;
     --accent: #e39566;
     --accent-soft: #2a211a;
+    --code-bg: #221e18;
     --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 14px 30px -20px rgba(0, 0, 0, .9);
     --grain: .05;
   }
@@ -99,12 +101,36 @@ img { display: block; max-width: 100%; height: auto; }
   padding: 28px var(--gutter) 0;
 }
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--display);
   font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 24;
   font-weight: 600;
   font-size: 19px;
   letter-spacing: -.01em;
   text-decoration: none;
+}
+/* The studio mark ships as a cream monogram drawn for a dark splash screen.
+   Masking it instead of showing the file lets the page tint it, so it stays
+   legible on paper and on ink. */
+.wordmark::before {
+  content: "";
+  width: 23px;
+  height: 23px;
+  flex: none;
+  background: currentColor;
+  -webkit-mask: url("../brand/logo-mark.png") center / contain no-repeat;
+  mask: url("../brand/logo-mark.png") center / contain no-repeat;
+}
+
+.hero-mark {
+  width: 56px;
+  height: 56px;
+  margin: 0 0 22px;
+  background: var(--accent);
+  -webkit-mask: url("../brand/logo-mark.png") center / contain no-repeat;
+  mask: url("../brand/logo-mark.png") center / contain no-repeat;
 }
 .masthead nav { display: flex; gap: 18px; font-size: 15px; }
 .masthead nav a { color: var(--muted); text-decoration: none; }
@@ -166,6 +192,10 @@ h1 {
 }
 .plate:hover { transform: translateY(-3px); border-color: var(--accent); }
 .plate img { width: 76px; height: 76px; border-radius: 19px; border: 1px solid var(--line); }
+.plate-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 8px; }
+.plate-top .chip { margin: 0; }
+.go { display: flex; color: var(--accent); transition: transform .25s cubic-bezier(.2, .7, .3, 1); }
+.plate:hover .go { transform: translateX(4px); }
 .plate h2 {
   font-family: var(--display);
   font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 36;
@@ -175,9 +205,7 @@ h1 {
   letter-spacing: -.015em;
   margin: 2px 0 6px;
 }
-.plate p { margin: 0 0 12px; color: var(--muted); font-size: 16px; }
-.plate .more { font-size: 15px; font-weight: 600; color: var(--accent); }
-.plate .more::after { content: " \2192"; }
+.plate p { margin: 0; color: var(--muted); font-size: 16px; }
 
 .chip {
   display: inline-block;
@@ -222,8 +250,23 @@ section { margin: 0 0 48px; }
   margin: 0 calc(var(--gutter) * -1);
   padding-inline: var(--gutter);
   scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
 }
+/* The platform scrollbar is a wide grey trough with stepper arrows on Windows,
+   which sits badly under the screenshots. Chromium only honours
+   ::-webkit-scrollbar while `scrollbar-width` is unset, so the standard
+   properties are kept for the engines that have no pseudo-element. */
+@supports not selector(::-webkit-scrollbar) {
+  .rail { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+}
+.rail::-webkit-scrollbar { height: 8px; }
+.rail::-webkit-scrollbar-track { background: transparent; }
+.rail::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 999px;
+  transition: background .2s;
+}
+.rail:hover::-webkit-scrollbar-thumb { background: var(--muted); }
+.rail::-webkit-scrollbar-thumb:active { background: var(--accent); }
 .rail img {
   flex: 0 0 auto;
   width: 168px;
@@ -260,6 +303,47 @@ section { margin: 0 0 48px; }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
 .btn.primary:hover { filter: brightness(1.08); }
 .note { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+
+/* --- long-form documents (privacy, terms) ------------------------------ */
+
+.doc { padding-bottom: 16px; }
+.doc > header { border-bottom: 1px solid var(--line); padding: 0 0 26px; margin: 44px 0 34px; }
+.doc > header h1 { font-size: clamp(32px, 6.5vw, 46px); margin: 0 0 12px; }
+.doc .meta { margin: 0; color: var(--muted); font-size: 14px; }
+.doc h2 {
+  font-family: var(--display);
+  font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 36;
+  font-weight: 600;
+  font-size: 25px;
+  line-height: 1.25;
+  letter-spacing: -.015em;
+  margin: 44px 0 12px;
+}
+.doc h3 {
+  font-family: var(--display);
+  font-variation-settings: "SOFT" 20, "opsz" 24;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 30px 0 8px;
+}
+.doc p, .doc li { max-width: var(--measure); }
+.doc p { margin: 0 0 16px; }
+.doc ul { padding-left: 20px; }
+.doc li { margin: 6px 0; }
+.doc a { color: var(--accent); text-underline-offset: 2px; }
+.doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0 24px;
+  font-size: 15px;
+  display: block;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.doc th, .doc td { text-align: left; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.doc th { font-weight: 600; white-space: nowrap; }
+.doc code { background: var(--code-bg); padding: 1px 6px; border-radius: 4px; font-size: 14px; }
 
 /* --- footer ------------------------------------------------------------ */
 

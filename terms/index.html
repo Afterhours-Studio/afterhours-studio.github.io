@@ -5,38 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Terms of Use | Afterhours Studio</title>
 <meta name="description" content="Terms of use for all mobile games published by Afterhours Studio.">
-<style>
-  :root {
-    --bg: #ffffff; --fg: #1a1a1a; --muted: #5c5c5c;
-    --line: #e2e2e2; --accent: #1a1a1a; --code-bg: #f5f5f5;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #121212; --fg: #e8e8e8; --muted: #a0a0a0;
-      --line: #2e2e2e; --accent: #e8e8e8; --code-bg: #1e1e1e;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--fg);
-    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-text-size-adjust: 100%;
-  }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 48px 20px 96px; }
-  header { border-bottom: 1px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
-  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
-  h1 { font-size: 30px; line-height: 1.25; margin: 0 0 12px; }
-  h2 { font-size: 20px; margin: 40px 0 12px; }
-  .meta { color: var(--muted); font-size: 14px; margin: 0; }
-  a { color: var(--accent); }
-  ul { padding-left: 20px; }
-  li { margin: 6px 0; }
-  code { background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 14px; }
-  footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
-</style>
+<link rel="icon" href="/assets/brand/favicon-180.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/brand/favicon-180.png">
+<link rel="preload" href="/assets/fonts/fraunces-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/karla-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
-<div class="wrap">
+<header class="shell masthead">
+  <a class="wordmark" href="/">Afterhours Studio</a>
+  <nav>
+    <a href="/#games">Games</a>
+    <a href="/privacy/">Privacy</a>
+    <a href="/terms/">Terms</a>
+  </nav>
+</header>
+
+<main class="shell doc">
 
 <header>
   <p class="eyebrow">Afterhours Studio</p>
@@ -197,10 +182,17 @@ us regarding the Games.</p>
 <p>Afterhours Studio<br>
 Email: <a href="mailto:h1dr0n@icloud.com">h1dr0n@icloud.com</a></p>
 
-<footer>
-  <p>&copy; 2026 Afterhours Studio. &middot; <a href="/">Home</a> &middot; <a href="/privacy/">Privacy Policy</a></p>
-</footer>
+</main>
 
-</div>
+<footer class="shell">
+  <p class="footer-links">
+    <a href="/">Home</a>
+    <a href="/privacy/">Privacy Policy</a>
+    <a href="/terms/">Terms of Use</a>
+    <a href="mailto:h1dr0n@icloud.com">Contact</a>
+    <a href="https://github.com/Afterhours-Studio" rel="noopener">GitHub</a>
+  </p>
+  <p class="colophon">&copy; 2026 Afterhours Studio. Mobile games for Android, with iOS to follow.</p>
+</footer>
 </body>
 </html>
