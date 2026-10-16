@@ -45,7 +45,7 @@
 <header>
   <p class="eyebrow">Afterhours Studio</p>
   <h1>Privacy Policy</h1>
-  <p class="meta">Last updated: 15 October 2026</p>
+  <p class="meta">Last updated: 17 October 2026</p>
 </header>
 
 <p>This Privacy Policy explains how <strong>Afterhours Studio</strong> (&ldquo;we&rdquo;, &ldquo;us&rdquo;) handles
@@ -60,7 +60,8 @@ Games.</p>
 
 <h2>Summary</h2>
 <ul>
-  <li>We do not ask you to create an account, and we do not ask for your name, email address, phone number or payment details.</li>
+  <li>We do not ask you to create an account with us, and we do not ask for your name, email address, phone number or payment details.</li>
+  <li>Some of our Games offer an optional Google Play Games sign-in, with cloud save to your own Google account. It is never required, and the Game works without it.</li>
   <li>Our Games display advertising, offer optional in-app purchases, and use crash and usage analytics. All of these are provided by Google.</li>
   <li>Those services automatically collect technical identifiers and usage data, described in detail below.</li>
   <li>We do not sell your personal information for money. Advertising identifiers are made
@@ -99,6 +100,33 @@ collected automatically by third-party software development kits (SDKs) embedded
   <tr><td>Device state at the time of the crash (model, OS version, available memory and storage, orientation)</td><td>Reproducing the conditions that caused the crash</td></tr>
 </table>
 
+<h3>Google Play Games (sign-in and cloud save)</h3>
+
+<p>Some of our Games offer an optional Google Play Games sign-in. It is never required: you can
+decline it, or simply not use it, and the Game plays the same way without it. If you have signed
+in before, the Game may sign you in again silently on the next launch, using the account you
+already approved. You can sign out at any time, as described in
+<a href="#your-choices">Your choices</a>.</p>
+
+<table>
+  <tr><th>Data</th><th>Purpose</th></tr>
+  <tr><td>Play Games player ID (an identifier for your Play Games profile, specific to our Games)</td><td>Recognising you as the signed-in player, and matching you with your cloud save</td></tr>
+  <tr><td>Play Games gamer tag (the display name you chose for Play Games)</td><td>Showing who is signed in, on the Game screen</td></tr>
+  <tr><td>Saved game data (progress, levels and areas unlocked, in-game currencies and items, settings)</td><td>Backing up your progress, and restoring it on a new device or after reinstalling</td></tr>
+</table>
+
+<p>The player ID and the gamer tag stay on your device and are only used to show, inside the Game,
+who is signed in. We do not send them to Firebase Analytics or to Crashlytics, and they do not
+appear in crash reports: those services use their own identifiers, which are not linked to your
+Google account.</p>
+
+<p>While you are signed in, the Game uploads your saved game data to the Google Play Games Saved
+Games service, into storage that belongs to your own Google account. This happens when you leave
+the Game running in the background, and every few minutes while you play. We cannot read, change
+or delete that data: it is held by Google under your account, and the Game reads it back only on a
+device where you are signed in. When you sign in on a device that already holds local progress,
+the Game compares the two saves and asks you which one to keep before anything is overwritten.</p>
+
 <h3>Google Play Billing (in-app purchases)</h3>
 
 <p>Purchases inside our Games are processed entirely by Google Play. Your card or other payment
@@ -120,6 +148,7 @@ Refunds are handled under the Google Play refund policy; see our
   <li>To measure whether advertising works and to detect invalid or fraudulent traffic.</li>
   <li>To understand how our Games are played, so we can balance difficulty and improve them.</li>
   <li>To identify, reproduce and fix crashes and performance problems.</li>
+  <li>To save your progress to your own Google account and restore it later, where you have signed in to Google Play Games.</li>
 </ul>
 
 <p>We do not use this data to build a profile of you as an individual, and we do not attempt
@@ -137,6 +166,7 @@ to identify you by name.</p>
   <tr><td>Usage analytics</td><td>Our legitimate interest in understanding and improving the Game</td></tr>
   <tr><td>Fraud and invalid traffic prevention</td><td>Our legitimate interest, and that of advertisers, in preventing abuse</td></tr>
   <tr><td>Delivering and restoring in-app purchases</td><td>Performance of the contract for the item you bought</td></tr>
+  <tr><td>Google Play Games sign-in, and saving your progress to your Google account</td><td>Your consent, given by choosing to sign in, which you may withdraw by signing out</td></tr>
   <tr><td>Responding to legal requests</td><td>Compliance with a legal obligation</td></tr>
 </table>
 
@@ -148,6 +178,9 @@ to identify you by name.</p>
   <li><strong>Firebase Analytics and Crashlytics</strong> process data on our behalf, as our service provider.</li>
   <li><strong>AdMob</strong> also uses data for its own advertising purposes, including serving
       personalised ads across its network where you have consented to that.</li>
+  <li><strong>Google Play Games</strong>, where you sign in, provides your player ID and gamer tag
+      to the Game and holds your saved game data in your own Google account. We do not have access
+      to that storage, and we do not pass your player ID or gamer tag to anyone.</li>
 </ul>
 
 <p>Google handling of this data is governed by the
@@ -196,6 +229,9 @@ out in Google&rsquo;s
       <a href="https://optout.aboutads.info/" rel="noopener">Digital Advertising Alliance</a>,
       <a href="https://www.youronlinechoices.eu/" rel="noopener">Your Online Choices</a> (EU), and
       <a href="https://adssettings.google.com/" rel="noopener">Google Ads Settings</a>.</li>
+  <li><strong>Google Play Games sign-in.</strong> Signing in is optional. You can decline it when a
+      Game offers it, and you can sign out from the Game at any time. Once you sign out, the Game
+      stops uploading your progress and continues from the save held on your device.</li>
   <li><strong>Uninstall.</strong> Removing the Game stops all further collection.</li>
 </ul>
 
@@ -218,6 +254,13 @@ of data associated with your device, email
 associated records. You can delete your Advertising ID yourself at any time from Android
 settings, which takes effect immediately.</p>
 
+<p>If you have used the Google Play Games sign-in, your cloud save is held in your own Google
+account and we can neither read nor delete it, so we cannot do this part for you. To remove it,
+sign out in the Game, then delete that Game&rsquo;s saved data from your Google account: open the
+Google Play Games app, go to <code>Settings &rsaquo; Delete Play Games account &amp; data</code>,
+choose to delete individual game data, and select the Game. Deleting the cloud save does not
+remove the progress stored on your device; uninstalling the Game does that.</p>
+
 <h2>Children</h2>
 
 <p>Our Games are intended for players aged 13 and over, and are not directed at children. We do
@@ -237,6 +280,7 @@ following schedule:</p>
   <tr><td>Firebase Analytics event and user-level data</td><td>Up to 14 months, then deleted automatically. Aggregated reports that do not identify any device may be kept longer.</td></tr>
   <tr><td>Firebase Crashlytics crash reports</td><td>90 days</td></tr>
   <tr><td>AdMob advertising data</td><td>According to the <a href="https://policies.google.com/technologies/retention" rel="noopener">Google retention policy</a></td></tr>
+  <tr><td>Google Play Games saved game data</td><td>Held in your Google account until you delete it, as described under <a href="#data-deletion">Data deletion requests</a></td></tr>
   <tr><td>Emails you send us</td><td>As long as needed to answer you, and no longer than 24 months</td></tr>
 </table>
 
