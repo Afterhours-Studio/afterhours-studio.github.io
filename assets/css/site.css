@@ -124,10 +124,20 @@ img { display: block; max-width: 100%; height: auto; }
   mask: url("../brand/logo-mark.png") center / contain no-repeat;
 }
 
+/* The mark sits at the right edge of the studio name, so the two read as one
+   lockup across the measure rather than as a stacked logo. */
+.hero-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 0 20px;
+}
+.hero-row h1 { margin: 0; }
 .hero-mark {
-  width: 56px;
-  height: 56px;
-  margin: 0 0 22px;
+  flex: none;
+  width: clamp(46px, 9vw, 68px);
+  aspect-ratio: 1;
   background: var(--accent);
   -webkit-mask: url("../brand/logo-mark.png") center / contain no-repeat;
   mask: url("../brand/logo-mark.png") center / contain no-repeat;
