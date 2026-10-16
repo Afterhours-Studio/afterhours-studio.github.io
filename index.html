@@ -4,38 +4,89 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Afterhours Studio</title>
-<meta name="description" content="Afterhours Studio is an independent mobile game studio.">
-<style>
-  :root { --bg: #ffffff; --fg: #1a1a1a; --muted: #5c5c5c; --line: #e2e2e2; }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg: #121212; --fg: #e8e8e8; --muted: #a0a0a0; --line: #2e2e2e; }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--fg); min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
-    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-text-size-adjust: 100%;
-  }
-  .wrap { width: fit-content; max-width: 100%; padding: 48px 20px; text-align: center; }
-  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
-  h1 { font-size: min(40px, calc((100vw - 40px) / 8.5)); line-height: 1.15; margin: 0 0 16px; white-space: nowrap; }
-  .lede { color: var(--muted); line-height: 1.6; margin: 0 0 28px; width: 0; min-width: 100%; }
-  nav { border-top: 1px solid var(--line); padding-top: 20px; display: flex; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; }
-  nav a { color: var(--fg); font-size: 15px; }
-</style>
+<meta name="description" content="Afterhours Studio is an independent mobile game studio. Mobile games made out of passion, for relaxing after a long day at work.">
+<link rel="canonical" href="https://afterhours-studio.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Afterhours Studio">
+<meta property="og:description" content="Mobile games made out of passion, for relaxing after a long day at work.">
+<meta property="og:url" content="https://afterhours-studio.github.io/">
+<meta property="og:image" content="https://afterhours-studio.github.io/assets/games/capybara-onsen/feature.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/games/capybara-onsen/icon.webp" type="image/webp">
+<link rel="preload" href="/assets/fonts/fraunces-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/karla-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
-<div class="wrap">
-  <p class="eyebrow">Independent game development</p>
-  <h1>Afterhours Studio</h1>
-  <p class="lede">Mobile games made out of passion, for relaxing after a long day at work.</p>
+
+<header class="shell masthead">
+  <a class="wordmark" href="/">Afterhours Studio</a>
   <nav>
+    <a href="#games">Games</a>
+    <a href="/privacy/">Privacy</a>
+    <a href="/terms/">Terms</a>
+  </nav>
+</header>
+
+<main class="shell">
+
+  <div class="hero rise">
+    <p class="eyebrow">Independent game development</p>
+    <h1>Afterhours Studio</h1>
+    <p class="lede">Mobile games made out of passion, for relaxing after a long day at work.</p>
+  </div>
+
+  <section id="games" class="rise">
+    <p class="rule">Games</p>
+    <div class="games">
+
+      <!-- GAME PLATE TEMPLATE.
+           Adding a game: copy one <a class="plate"> block, then change the href,
+           the icon path, the title, the one-line description and the chip.
+           Drop the chip line once the game is live on Google Play.
+           Art goes in /assets/games/<slug>/ (icon.webp, feature.webp,
+           shot-1.webp .. shot-6.webp) and a press kit page in
+           /games/<slug>/index.html. -->
+
+      <a class="plate" href="/games/capybara-onsen/">
+        <img src="/assets/games/capybara-onsen/icon.webp" alt="Capybara Onsen app icon" width="76" height="76" loading="lazy">
+        <div>
+          <span class="chip">In development</span>
+          <h2>Capybara Onsen</h2>
+          <p>Soak cute capybaras and grow a relaxing hot spring onsen.</p>
+          <span class="more">Press kit</span>
+        </div>
+      </a>
+
+      <a class="plate" href="/games/slide-pop/">
+        <img src="/assets/games/slide-pop/icon.webp" alt="Slide Pop app icon" width="76" height="76" loading="lazy">
+        <div>
+          <span class="chip">In development</span>
+          <h2>Slide Pop</h2>
+          <p>Slide colourful cubes, match three and clear the board before time runs out.</p>
+          <span class="more">Press kit</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="rise">
+    <p class="rule">Contact</p>
+    <p class="copy">Press enquiries, bug reports and anything else: <a href="mailto:h1dr0n@icloud.com">h1dr0n@icloud.com</a>. Press kits above hold icons, screenshots and feature art for each game.</p>
+  </section>
+
+</main>
+
+<footer class="shell">
+  <p class="footer-links">
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Use</a>
     <a href="mailto:h1dr0n@icloud.com">Contact</a>
     <a href="https://github.com/Afterhours-Studio" rel="noopener">GitHub</a>
-  </nav>
-</div>
+  </p>
+  <p class="colophon">Afterhours Studio. Games for Android, published on Google Play.</p>
+</footer>
+
 </body>
 </html>

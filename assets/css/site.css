@@ -1,0 +1,299 @@
+/* Afterhours Studio site styles.
+   One stylesheet for the home page and the per-game press kits. No build step,
+   no framework, no JavaScript: GitHub Pages serves these files as they are.
+   Fonts are self-hosted so the site makes no third-party request, which is what
+   the privacy policy says. */
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("../fonts/fraunces-var-latin.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Karla";
+  src: url("../fonts/karla-var-latin.woff2") format("woff2-variations");
+  font-weight: 200 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --paper: #faf7f2;
+  --raised: #fffdfa;
+  --ink: #1d1b17;
+  --muted: #6b655c;
+  --line: #e3dcd0;
+  --accent: #a94f28;
+  --accent-soft: #f2e4d9;
+  --shadow: 0 1px 2px rgba(40, 30, 16, .05), 0 12px 28px -18px rgba(40, 30, 16, .35);
+  --grain: .035;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "Karla", "Segoe UI", Helvetica, Arial, sans-serif;
+  --gutter: 20px;
+  --measure: 62ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14120f;
+    --raised: #1c1915;
+    --ink: #ece7dd;
+    --muted: #9b9388;
+    --line: #2e2922;
+    --accent: #e39566;
+    --accent-soft: #2a211a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 14px 30px -20px rgba(0, 0, 0, .9);
+    --grain: .05;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 17px/1.65 var(--body);
+  font-variant-numeric: tabular-nums;
+  overflow-x: hidden;
+}
+
+/* A single tiling grain sheet keeps the flat background from reading as a
+   screenshot of a document. It is one inline SVG, so no extra request. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+
+a { color: inherit; }
+a:focus-visible,
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+img { display: block; max-width: 100%; height: auto; }
+
+.shell { width: 100%; max-width: 760px; margin: 0 auto; padding: 0 var(--gutter); }
+
+/* --- masthead ---------------------------------------------------------- */
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+  /* Keep the shell's side gutter: a bare `padding: 28px 0 0` would override it
+     and let the nav run into the edge of a phone screen. */
+  padding: 28px var(--gutter) 0;
+}
+.wordmark {
+  font-family: var(--display);
+  font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 24;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -.01em;
+  text-decoration: none;
+}
+.masthead nav { display: flex; gap: 18px; font-size: 15px; }
+.masthead nav a { color: var(--muted); text-decoration: none; }
+.masthead nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+/* --- hero -------------------------------------------------------------- */
+
+.hero { padding: 72px 0 56px; }
+.eyebrow {
+  margin: 0 0 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+h1 {
+  font-family: var(--display);
+  font-variation-settings: "SOFT" 30, "WONK" 1, "opsz" 120;
+  font-weight: 600;
+  font-size: clamp(40px, 9vw, 68px);
+  line-height: 1.03;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+}
+.lede { margin: 0; max-width: 46ch; font-size: clamp(18px, 2.4vw, 21px); color: var(--muted); }
+
+/* --- section headings -------------------------------------------------- */
+
+.rule {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin: 0 0 28px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.rule::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* --- game plates ------------------------------------------------------- */
+
+.games { display: grid; gap: 14px; padding-bottom: 8px; }
+
+.plate {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 20px;
+  align-items: start;
+  padding: 20px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  transition: transform .25s cubic-bezier(.2, .7, .3, 1), border-color .25s, box-shadow .25s;
+}
+.plate:hover { transform: translateY(-3px); border-color: var(--accent); }
+.plate img { width: 76px; height: 76px; border-radius: 19px; border: 1px solid var(--line); }
+.plate h2 {
+  font-family: var(--display);
+  font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 36;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  margin: 2px 0 6px;
+}
+.plate p { margin: 0 0 12px; color: var(--muted); font-size: 16px; }
+.plate .more { font-size: 15px; font-weight: 600; color: var(--accent); }
+.plate .more::after { content: " \2192"; }
+
+.chip {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* --- press kit --------------------------------------------------------- */
+
+.back { display: inline-block; margin: 28px 0 0; color: var(--muted); font-size: 15px; text-decoration: none; }
+.back::before { content: "\2190  "; }
+.back:hover { color: var(--ink); }
+
+.kit-head { display: grid; grid-template-columns: 104px 1fr; gap: 24px; align-items: start; padding: 40px 0 36px; }
+.kit-head img { width: 104px; height: 104px; border-radius: 26px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.kit-head h1 { font-size: clamp(32px, 7vw, 46px); margin-bottom: 12px; }
+.kit-head p { margin: 0; color: var(--muted); max-width: 42ch; }
+
+.feature { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin: 0 0 48px; }
+
+section { margin: 0 0 48px; }
+
+.facts { width: 100%; border-collapse: collapse; font-size: 15px; }
+.facts th, .facts td { text-align: left; vertical-align: top; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.facts th { width: 38%; font-weight: 400; color: var(--muted); padding-right: 16px; }
+.facts code { font-size: 14px; }
+
+/* A rail rather than a grid: phone screenshots are tall, and six of them in a
+   grid would push everything else off the page. */
+.rail {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  margin: 0 calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.rail img {
+  flex: 0 0 auto;
+  width: 168px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  scroll-snap-align: start;
+}
+
+.copy { max-width: var(--measure); }
+.copy h3 {
+  font-family: var(--display);
+  font-variation-settings: "SOFT" 20, "opsz" 24;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: .01em;
+  margin: 28px 0 8px;
+}
+.copy p { margin: 0 0 14px; }
+.copy ul { margin: 0 0 14px; padding-left: 20px; color: var(--muted); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn {
+  display: inline-block;
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--raised);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color .2s, transform .2s;
+}
+.btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.btn.primary:hover { filter: brightness(1.08); }
+.note { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+
+/* --- footer ------------------------------------------------------------ */
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 12px 22px; font-size: 15px; margin: 0 0 14px; }
+.footer-links a { color: var(--muted); text-decoration: none; }
+.footer-links a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.colophon { margin: 0; font-size: 14px; color: var(--muted); }
+
+/* --- entrance ---------------------------------------------------------- */
+
+.rise { animation: rise .7s cubic-bezier(.2, .7, .3, 1) backwards; }
+.rise:nth-child(2) { animation-delay: .07s; }
+.rise:nth-child(3) { animation-delay: .14s; }
+.rise:nth-child(4) { animation-delay: .21s; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero { padding: 48px 0 40px; }
+  .plate { grid-template-columns: 60px 1fr; gap: 16px; padding: 16px; }
+  .plate img { width: 60px; height: 60px; border-radius: 15px; }
+  .plate h2 { font-size: 21px; }
+  .kit-head { grid-template-columns: 1fr; gap: 18px; padding-top: 30px; }
+  .kit-head img { width: 84px; height: 84px; border-radius: 21px; }
+  .facts th { width: 44%; }
+}
