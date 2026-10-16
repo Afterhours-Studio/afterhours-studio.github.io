@@ -92,10 +92,12 @@ img { display: block; max-width: 100%; height: auto; }
 
 .masthead {
   display: flex;
-  align-items: baseline;
+  /* Centred, not baseline: the wordmark carries the logo as a ::before box,
+     which has no text baseline of its own and dragged the row out of line. */
+  align-items: center;
   justify-content: space-between;
   gap: 16px 24px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   /* Keep the shell's side gutter: a bare `padding: 28px 0 0` would override it
      and let the nav run into the edge of a phone screen. */
   padding: 28px var(--gutter) 0;
@@ -144,7 +146,8 @@ img { display: block; max-width: 100%; height: auto; }
   -webkit-mask: url("../brand/logo-mark.png") center / contain no-repeat;
   mask: url("../brand/logo-mark.png") center / contain no-repeat;
 }
-.masthead nav { display: flex; gap: 18px; font-size: 15px; }
+.masthead nav { display: flex; gap: 18px; font-size: 15px; flex: none; }
+.masthead .wordmark { min-width: 0; white-space: nowrap; }
 .masthead nav a { color: var(--muted); text-decoration: none; }
 .masthead nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 
@@ -382,6 +385,23 @@ footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56
     animation-delay: 0ms !important;
     transition-duration: .001ms !important;
   }
+}
+
+@media (max-width: 640px) {
+  /* Keep the masthead on one line at phone width: the wordmark and the three
+     links both shrink rather than letting the nav wrap under the logo. */
+  .masthead { gap: 10px; padding-top: 22px; }
+  .wordmark { font-size: 16px; gap: 8px; }
+  .wordmark::before { width: 19px; height: 19px; }
+  .masthead nav { gap: 11px; font-size: 13px; }
+}
+
+/* Narrower than a 360 px phone the name and the three links start to collide.
+   The mark alone carries the link home; the text stays in the DOM, so the
+   accessible name is unchanged. */
+@media (max-width: 352px) {
+  .wordmark { font-size: 0; }
+  .wordmark::before { width: 22px; height: 22px; }
 }
 
 @media (max-width: 540px) {
