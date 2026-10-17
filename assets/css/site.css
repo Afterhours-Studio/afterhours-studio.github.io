@@ -265,6 +265,11 @@ section { margin: 0 0 48px; }
   margin: 0 calc(var(--gutter) * -1);
   padding-inline: var(--gutter);
   scroll-snap-type: x mandatory;
+  /* The rail bleeds to the screen edge and pads itself back to the text column.
+     Without a matching scroll-padding the snap points ignore that padding, so
+     scrolling to the start parks the first shot against the bare edge, out of
+     line with everything above it. */
+  scroll-padding-inline: var(--gutter);
 }
 /* The platform scrollbar is a wide grey trough with stepper arrows on Windows,
    which sits badly under the screenshots. Chromium only honours
@@ -368,20 +373,12 @@ footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56
 .footer-links a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 
 /* Pushed to the far end of the row, so the two links stay left and the control
-   that moves the page sits on its own side. */
-.to-top {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 13px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  font-size: 13px;
-  font-weight: 600;
-  transition: border-color .2s, color .2s;
-}
-.footer-links .to-top:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+   that moves the page sits on its own side. Styled as a link like its
+   neighbours, not as a button. */
+.to-top { margin-left: auto; }
+/* Kept out of the flex flow so the hover underline runs the way it does on the
+   plain links beside it, rather than stretching across the icon gap. */
+.to-top svg { vertical-align: -2px; margin-left: 6px; }
 .colophon { margin: 0; font-size: 14px; color: var(--muted); }
 
 /* --- entrance ---------------------------------------------------------- */
