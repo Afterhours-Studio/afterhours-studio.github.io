@@ -57,7 +57,7 @@
 
 * { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -363,9 +363,25 @@ section { margin: 0 0 48px; }
 /* --- footer ------------------------------------------------------------ */
 
 footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56px; }
-.footer-links { display: flex; flex-wrap: wrap; gap: 12px 22px; font-size: 15px; margin: 0 0 14px; }
+.footer-links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; font-size: 15px; margin: 0 0 14px; }
 .footer-links a { color: var(--muted); text-decoration: none; }
 .footer-links a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Pushed to the far end of the row, so the two links stay left and the control
+   that moves the page sits on its own side. */
+.to-top {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: border-color .2s, color .2s;
+}
+.footer-links .to-top:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
 .colophon { margin: 0; font-size: 14px; color: var(--muted); }
 
 /* --- entrance ---------------------------------------------------------- */
@@ -380,6 +396,7 @@ footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: .001ms !important;
     animation-delay: 0ms !important;
