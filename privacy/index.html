@@ -27,7 +27,7 @@
 <header>
   <p class="eyebrow">Afterhours Studio</p>
   <h1>Privacy Policy</h1>
-  <p class="meta">Last updated: 17 October 2026</p>
+  <p class="meta">Last updated: 21 October 2026</p>
 </header>
 
 <p>This Privacy Policy explains how <strong>Afterhours Studio</strong> (&ldquo;we&rdquo;, &ldquo;us&rdquo;) handles
@@ -44,7 +44,8 @@ Games.</p>
 <ul>
   <li>We do not ask you to create an account with us, and we do not ask for your name, email address, phone number or payment details.</li>
   <li>Some of our Games offer an optional Google Play Games sign-in, with cloud save to your own Google account. It is never required, and the Game works without it.</li>
-  <li>Our Games display advertising, offer optional in-app purchases, and use crash and usage analytics. All of these are provided by Google.</li>
+  <li>Our Games display advertising, offer optional in-app purchases, and use crash and usage analytics. Advertising, purchases and crash reporting are provided by Google.</li>
+  <li>Usage analytics also go to Playmetry, an analytics server we run ourselves. It receives the same kinds of technical and usage data, and no one else has access to it.</li>
   <li>Those services automatically collect technical identifiers and usage data, described in detail below.</li>
   <li>We do not sell your personal information for money. Advertising identifiers are made
       available to Google for personalised advertising, which some US state laws treat as
@@ -53,8 +54,10 @@ Games.</p>
 
 <h2>Information collected</h2>
 
-<p>We do not operate our own servers and do not collect data directly. The data below is
-collected automatically by third-party software development kits (SDKs) embedded in our Games.</p>
+<p>Most of the data below is collected automatically by third-party software development kits
+(SDKs) embedded in our Games. We also run our own analytics server, described under Playmetry,
+which receives the same kinds of technical and usage data. None of it asks you to type anything
+in, and none of it identifies you by name.</p>
 
 <h3>Google AdMob (advertising)</h3>
 <table>
@@ -124,6 +127,26 @@ details are handled by Google and are never shared with us.</p>
 Refunds are handled under the Google Play refund policy; see our
 <a href="/terms/">Terms of Use</a>.</p>
 
+<h3>Playmetry (our own analytics)</h3>
+
+<p>Playmetry is an analytics server that we run ourselves. It is not a third-party service: the
+data goes to our own machine and is not passed on to anyone. It uses an identifier generated on
+your device the first time you open the Game, which is not your Advertising ID and is not linked
+to any account.</p>
+
+<table>
+  <tr><th>Data</th><th>Purpose</th></tr>
+  <tr><td>A random identifier created on your device at first launch, and the install time</td><td>Counting players and separating one device from another, without naming anyone</td></tr>
+  <tr><td>Device model, device class, operating system version, language, locale and time zone</td><td>Knowing which devices and languages to support and test</td></tr>
+  <tr><td>App version, store build or test build</td><td>Telling releases apart when comparing behaviour</td></tr>
+  <tr><td>Sessions, session length, levels reached, tutorial steps, in-game currency earned and spent</td><td>Seeing where the game is too hard, too slow or confusing</td></tr>
+  <tr><td>In-app purchase and advertising revenue events</td><td>Understanding whether the game pays for itself</td></tr>
+  <tr><td>Error reports from the Game</td><td>Finding and fixing faults</td></tr>
+</table>
+
+<p>The same server returns remote configuration values to the Game, such as timings and prices
+that we can adjust without a new release.</p>
+
 <h2>How the information is used</h2>
 <ul>
   <li>To display advertising, which is how our Games are funded.</li>
@@ -154,7 +177,8 @@ to identify you by name.</p>
 
 <h2>Sharing</h2>
 
-<p>Data collected by the SDKs listed above is transmitted to <strong>Google LLC</strong>.</p>
+<p>Data collected by the SDKs listed above is transmitted to <strong>Google LLC</strong>. Data
+collected by Playmetry is not shared with anyone: it stays on our own server.</p>
 
 <ul>
   <li><strong>Firebase Analytics and Crashlytics</strong> process data on our behalf, as our service provider.</li>
@@ -232,8 +256,8 @@ of data associated with your device, email
   <li>your device model and Android version.</li>
 </ul>
 
-<p>We will acknowledge the request within 30 days and forward it to Google for deletion of the
-associated records. You can delete your Advertising ID yourself at any time from Android
+<p>We will acknowledge the request within 30 days. We delete the matching Playmetry records on
+our own server ourselves, and forward the rest to Google for deletion of the associated records. You can delete your Advertising ID yourself at any time from Android
 settings, which takes effect immediately.</p>
 
 <p>If you have used the Google Play Games sign-in, your cloud save is held in your own Google
@@ -254,8 +278,8 @@ believe a child has provided us with personal information, contact us and we wil
 
 <h2>Retention</h2>
 
-<p>We do not store this data on our own systems. It is held by Google and deleted on the
-following schedule:</p>
+<p>Apart from Playmetry, we do not store this data on our own systems. The rest is held by
+Google and deleted on the following schedule:</p>
 
 <table>
   <tr><th>Data</th><th>Retention</th></tr>
@@ -263,6 +287,7 @@ following schedule:</p>
   <tr><td>Firebase Crashlytics crash reports</td><td>90 days</td></tr>
   <tr><td>AdMob advertising data</td><td>According to the <a href="https://policies.google.com/technologies/retention" rel="noopener">Google retention policy</a></td></tr>
   <tr><td>Google Play Games saved game data</td><td>Held in your Google account until you delete it, as described under <a href="#data-deletion">Data deletion requests</a></td></tr>
+  <tr><td>Playmetry analytics on our own server</td><td>Kept while the Game is supported, and deleted on request</td></tr>
   <tr><td>Emails you send us</td><td>As long as needed to answer you, and no longer than 24 months</td></tr>
 </table>
 
