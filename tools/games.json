@@ -1,0 +1,57 @@
+[
+  {
+    "slug": "sheep-loop",
+    "name": "Sheep Loop",
+    "store_name": "Sheep Loop: Flock Sort Puzzle",
+    "package": "com.afterhours.sheeploop",
+    "live": false,
+    "genre": "Puzzle",
+    "line": "Guide colourful sheep around the loop and sort them into matching pens.",
+    "about": "Tap a sheep and it joins the flock on the loop. Fill each pen with its own colour to send the flock home, but the loop only has room for so many sheep at once.",
+    "video": ""
+  },
+  {
+    "slug": "purlfect-pixels",
+    "name": "Purlfect Pixels",
+    "store_name": "Purlfect Pixels: Knit Puzzle",
+    "package": "com.afterhours.purlfectpixels",
+    "live": false,
+    "genre": "Puzzle",
+    "line": "Unravel yarn, fill the holes and knit cozy pixel art in a relaxing wool puzzle.",
+    "about": "Every level is a knitted picture with its yarn in the wrong places. Unravel the wrong stitches onto a spool, then knit them back where they belong until the picture is perfect.",
+    "video": ""
+  },
+  {
+    "slug": "wild-paws",
+    "name": "Wild Paws",
+    "store_name": "Wild Paws: Jungle Roguelike",
+    "package": "com.afterhours.jungletactics",
+    "live": false,
+    "genre": "Role Playing",
+    "line": "Lead a squad of animal heroes through the jungle in a roguelike RPG.",
+    "about": "Every run is a chapter of days: a fight, a choice, a camp, a merchant or a pact. Build a squad of three animal heroes, survive to the last day and beat the boss.",
+    "video": ""
+  },
+  {
+    "slug": "capybara-onsen",
+    "name": "Capybara Onsen",
+    "store_name": "Capybara Onsen: Cozy Idle",
+    "package": "com.afterhours.cpbronsen",
+    "live": true,
+    "genre": "Casual",
+    "line": "Soak cute capybaras and grow a relaxing hot spring onsen.",
+    "about": "Capybaras love a hot soak. Let them relax, earn coins while they bathe and turn a small pool into a hot spring resort. It keeps earning while the game is closed.",
+    "video": ""
+  },
+  {
+    "slug": "slide-pop",
+    "name": "Slide Pop",
+    "store_name": "Slide Pop: Cube Match Puzzle",
+    "package": "com.afterhours.slidepop",
+    "live": true,
+    "genre": "Puzzle",
+    "line": "Slide colourful cubes, match three and clear the board before time runs out.",
+    "about": "Swipe a jelly cube and it slides until something stops it. Line up three of the same colour and they pop. Easy to learn, tricky to master.",
+    "video": ""
+  }
+]
