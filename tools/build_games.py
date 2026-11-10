@@ -8,7 +8,7 @@ page at /games/<slug>/ never drift apart. Edit games.json, then run:
 
 games.json fields: slug, name, store_name, package, live (true = "Maintained", false =
 "In development"), genre, line (one sentence on the plate), about (two or three sentences
-in the modal), video. Art lives in assets/games/<slug>/ (icon.webp 256 px, feature.webp
+in the modal), highlights (two or three short points listed under it), video. Art lives in assets/games/<slug>/ (icon.webp 256 px, feature.webp
 1024x500).
 
 video: "" shows the feature art only; a path such as "/assets/games/<slug>/gameplay.mp4"
@@ -62,6 +62,8 @@ def card(g: dict, heading: str) -> str:
     play_url = f"https://play.google.com/store/apps/details?id={g['package']}"
     note = "" if g["live"] else '<p class="note">The Google Play link works once the game is published.</p>'
     layout = "card-body has-video" if g.get("video") else "card-body"
+    points = "".join(f"<li>{e(p)}</li>" for p in g.get("highlights", []))
+    points = f'<ul class="card-points">{points}</ul>' if points else ""
     return f"""<div class="card-head">
       <img src="/assets/games/{g['slug']}/icon.webp" alt="{e(g['name'])} app icon" width="72" height="72">
       <div>
@@ -74,6 +76,7 @@ def card(g: dict, heading: str) -> str:
       {media(g)}
       <div class="card-text">
         <p class="card-about">{e(g['about'])}</p>
+        {points}
         <p class="actions">
           <a class="btn primary" href="{play_url}" rel="noopener">Google Play</a>
           <span class="btn disabled" aria-disabled="true" title="Coming later">App Store</span>

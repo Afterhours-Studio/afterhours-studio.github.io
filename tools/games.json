@@ -8,6 +8,11 @@
     "genre": "Puzzle",
     "line": "Guide colourful sheep around the loop and sort them into matching pens.",
     "about": "Tap a sheep and it joins the flock on the loop. Fill each pen with its own colour to send the flock home, but the loop only has room for so many sheep at once.",
+    "highlights": [
+      "Linked sheep that have to travel together",
+      "Colour pens that change the plan mid-level",
+      "Short levels, easy to pick up anywhere"
+    ],
     "video": "/assets/games/sheep-loop/gameplay.mp4"
   },
   {
@@ -19,6 +24,11 @@
     "genre": "Puzzle",
     "line": "Unravel yarn, fill the holes and knit cozy pixel art in a relaxing wool puzzle.",
     "about": "Every level is a knitted picture with its yarn in the wrong places. Unravel the wrong stitches onto a spool, then knit them back where they belong until the picture is perfect.",
+    "highlights": [
+      "A new cozy picture to finish every level",
+      "Peek at the finished picture when you need a clue",
+      "Auto Knit and the Magic Spool for tricky boards"
+    ],
     "video": "/assets/games/purlfect-pixels/gameplay.mp4"
   },
   {
@@ -30,6 +40,11 @@
     "genre": "Role Playing",
     "line": "Lead a squad of animal heroes through the jungle in a roguelike RPG.",
     "about": "Every run is a chapter of days: a fight, a choice, a camp, a merchant or a pact. Build a squad of three animal heroes, survive to the last day and beat the boss.",
+    "highlights": [
+      "Animal heroes, each with their own role in the squad",
+      "A different path through the jungle every run",
+      "A boss waiting at the end of each chapter"
+    ],
     "video": ""
   },
   {
@@ -41,6 +56,11 @@
     "genre": "Casual",
     "line": "Soak cute capybaras and grow a relaxing hot spring onsen.",
     "about": "Capybaras love a hot soak. Let them relax, earn coins while they bathe and turn a small pool into a hot spring resort. It keeps earning while the game is closed.",
+    "highlights": [
+      "Saunas, foot baths and bamboo gardens to build",
+      "Capybaras that nap, soak and wander on their own",
+      "Daily quests, events and gifts to come back to"
+    ],
     "video": ""
   },
   {
@@ -52,6 +72,11 @@
     "genre": "Puzzle",
     "line": "Slide colourful cubes, match three and clear the board before time runs out.",
     "about": "Swipe a jelly cube and it slides until something stops it. Line up three of the same colour and they pop. Easy to learn, tricky to master.",
+    "highlights": [
+      "A countdown on every board",
+      "Boosters for the tight spots",
+      "Quick levels for a spare minute"
+    ],
     "video": "/assets/games/slide-pop/gameplay.mp4"
   }
 ]

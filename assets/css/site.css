@@ -511,3 +511,16 @@ html:has(.game-modal[open]) { overflow: hidden; }
 .game-modal { overscroll-behavior: contain; }
 /* A store the game is not on yet: shown, greyed out, not a link. */
 .btn.disabled { color: var(--muted); opacity: .55; cursor: not-allowed; pointer-events: none; }
+/* Two or three points under the blurb, so the text side holds its own beside the tall clip. */
+.card-points { list-style: none; margin: 0 0 22px; padding: 16px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+.card-points li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.45; color: var(--muted); }
+.card-points li::before {
+  content: ""; position: absolute; left: 2px; top: .55em;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+}
+@media (min-width: 600px) {
+  /* Beside the clip the text runs the clip's full height: the store buttons sit level with its bottom edge. */
+  .card-body.has-video { align-items: stretch; }
+  .card-body.has-video .card-text { display: flex; flex-direction: column; }
+  .card-body.has-video .actions { margin-top: auto; }
+}
