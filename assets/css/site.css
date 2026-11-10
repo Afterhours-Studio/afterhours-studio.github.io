@@ -509,3 +509,5 @@ footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56
 html { scrollbar-gutter: stable; }
 html:has(.game-modal[open]) { overflow: hidden; }
 .game-modal { overscroll-behavior: contain; }
+/* A store the game is not on yet: shown, greyed out, not a link. */
+.btn.disabled { color: var(--muted); opacity: .55; cursor: not-allowed; pointer-events: none; }

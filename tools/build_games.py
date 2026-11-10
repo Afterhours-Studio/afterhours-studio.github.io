@@ -76,7 +76,7 @@ def card(g: dict, heading: str) -> str:
         <p class="card-about">{e(g['about'])}</p>
         <p class="actions">
           <a class="btn primary" href="{play_url}" rel="noopener">Google Play</a>
-          <a class="btn" href="/privacy/">Privacy Policy</a>
+          <span class="btn disabled" aria-disabled="true" title="Coming later">App Store</span>
         </p>
         {note}
       </div>
