@@ -513,3 +513,9 @@ footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56
   .card-head img { width: 60px; height: 60px; border-radius: 15px; }
 }
 @media (prefers-reduced-motion: reduce) { .game-modal[open] { animation: none; } }
+/* While a game card is open the page behind it stays still: no scrolling under
+   the modal, and the modal's own scroll never chains to the page. The stable
+   gutter keeps the page from jumping sideways when its scrollbar goes away. */
+html { scrollbar-gutter: stable; }
+html:has(.game-modal[open]) { overflow: hidden; }
+.game-modal { overscroll-behavior: contain; }
