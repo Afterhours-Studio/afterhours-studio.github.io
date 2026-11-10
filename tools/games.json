@@ -8,7 +8,7 @@
     "genre": "Puzzle",
     "line": "Guide colourful sheep around the loop and sort them into matching pens.",
     "about": "Tap a sheep and it joins the flock on the loop. Fill each pen with its own colour to send the flock home, but the loop only has room for so many sheep at once.",
-    "video": ""
+    "video": "/assets/games/sheep-loop/gameplay.mp4"
   },
   {
     "slug": "purlfect-pixels",
