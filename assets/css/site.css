@@ -447,36 +447,26 @@ footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56
 .card-about { margin: 18px 0 20px; max-width: var(--measure); }
 .media {
   position: relative;
-  aspect-ratio: 16 / 9;
   border: 1px solid var(--line);
   border-radius: 14px;
   overflow: hidden;
   background: var(--code-bg);
 }
-.media img, .media video, .media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
-/* No trailer yet: the feature art, dimmed, with a quiet label in the middle. */
-.media.soon img { filter: saturate(.85) brightness(.72); }
-.soon-label {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 16px 9px 12px;
-  border-radius: 999px;
-  background: rgba(20, 18, 15, .72);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  backdrop-filter: blur(4px);
+.media img, .media video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+.media.feature-art { aspect-ratio: 1024 / 500; }
+/* Gameplay is captured on a phone, 9:16: shown upright like the phone it came from. */
+.media.gameplay { aspect-ratio: 9 / 16; width: min(100%, 280px); margin: 0 auto; background: #000; }
+.media.gameplay video { object-fit: contain; }
+.card-body.has-video .card-about { margin-top: 18px; }
+@media (min-width: 600px) {
+  .card-body.has-video { display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: start; }
+  .card-body.has-video .media.gameplay { width: 100%; }
+  .card-body.has-video .card-about { margin-top: 0; }
 }
 .game-page { padding: 32px 0 8px; }
 
 .game-modal {
-  width: min(560px, calc(100vw - 2 * var(--gutter)));
+  width: min(620px, calc(100vw - 2 * var(--gutter)));
   max-height: calc(100dvh - 32px);
   padding: 26px;
   border: 1px solid var(--line);

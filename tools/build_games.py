@@ -11,9 +11,10 @@ games.json fields: slug, name, store_name, package, live (true = "Maintained", f
 in the modal), video. Art lives in assets/games/<slug>/ (icon.webp 256 px, feature.webp
 1024x500).
 
-video: "" shows the feature art with "Trailer coming soon"; "youtube:<id>" embeds that
-YouTube video (privacy-enhanced domain); a path such as "/assets/games/<slug>/trailer.mp4"
-plays that file, with the feature art as its poster.
+video: "" shows the feature art only; a path such as "/assets/games/<slug>/gameplay.mp4"
+shows that 9:16 gameplay clip (muted, looping, autoplay when the card opens), with
+assets/games/<slug>/gameplay.webp as its poster when present. Encode clips with
+tools/encode_gameplay.sh.
 """
 import html
 import json
@@ -29,10 +30,6 @@ ARROW = (
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'
     '<path d="M4 10h11M10.5 5.5 15 10l-4.5 4.5"/></svg>'
 )
-PLAY = (
-    '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
-    '<path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>'
-)
 
 
 def e(text: str) -> str:
@@ -44,31 +41,27 @@ def chip(g: dict) -> str:
 
 
 def media(g: dict) -> str:
-    """The 16:9 video frame: a trailer when there is one, else the feature art."""
-    art = f"/assets/games/{g['slug']}/feature.webp"
+    """The gameplay video (9:16, muted, looping) when there is one, else the plain feature art."""
+    slug = g["slug"]
     video = g.get("video", "")
-    if video.startswith("youtube:"):
-        vid = e(video.split(":", 1)[1])
+    if not video:
         return (
-            f'<div class="media"><iframe src="https://www.youtube-nocookie.com/embed/{vid}" '
-            f'title="{e(g["name"])} trailer" loading="lazy" allow="encrypted-media; picture-in-picture" '
-            "allowfullscreen></iframe></div>"
+            f'<div class="media feature-art"><img src="/assets/games/{slug}/feature.webp" '
+            f'alt="{e(g["name"])} feature art" width="1024" height="500" loading="lazy"></div>'
         )
-    if video:
-        return (
-            f'<div class="media"><video src="{e(video)}" poster="{art}" controls playsinline '
-            f'preload="none" aria-label="{e(g["name"])} trailer"></video></div>'
-        )
+    poster = f"/assets/games/{slug}/gameplay.webp"
+    poster_attr = f' poster="{poster}"' if (ROOT / poster.lstrip("/")).exists() else ""
     return (
-        f'<div class="media soon"><img src="{art}" alt="{e(g["name"])} feature art" width="1024" height="500" '
-        f'loading="lazy"><span class="soon-label">{PLAY}Trailer coming soon</span></div>'
+        f'<div class="media gameplay"><video src="{e(video)}"{poster_attr} autoplay muted loop playsinline '
+        f'controls preload="metadata" aria-label="{e(g["name"])} gameplay"></video></div>'
     )
 
 
 def card(g: dict, heading: str) -> str:
-    """Body shared by the modal and the page."""
+    """Body shared by the modal and the page: head, then the media beside (or above) the text."""
     play_url = f"https://play.google.com/store/apps/details?id={g['package']}"
     note = "" if g["live"] else '<p class="note">The Google Play link works once the game is published.</p>'
+    layout = "card-body has-video" if g.get("video") else "card-body"
     return f"""<div class="card-head">
       <img src="/assets/games/{g['slug']}/icon.webp" alt="{e(g['name'])} app icon" width="72" height="72">
       <div>
@@ -77,13 +70,17 @@ def card(g: dict, heading: str) -> str:
         <p class="card-meta">{e(g['genre'])} · Android</p>
       </div>
     </div>
-    {media(g)}
-    <p class="card-about">{e(g['about'])}</p>
-    <p class="actions">
-      <a class="btn primary" href="{play_url}" rel="noopener">Google Play</a>
-      <a class="btn" href="/privacy/">Privacy Policy</a>
-    </p>
-    {note}"""
+    <div class="{layout}">
+      {media(g)}
+      <div class="card-text">
+        <p class="card-about">{e(g['about'])}</p>
+        <p class="actions">
+          <a class="btn primary" href="{play_url}" rel="noopener">Google Play</a>
+          <a class="btn" href="/privacy/">Privacy Policy</a>
+        </p>
+        {note}
+      </div>
+    </div>"""
 
 
 def plates() -> str:
