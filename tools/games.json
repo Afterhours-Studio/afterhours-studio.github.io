@@ -1,5 +1,21 @@
 [
   {
+    "slug": "sand-haulers",
+    "name": "Sand Haulers",
+    "store_name": "Sand Haulers: Color Sort",
+    "package": "com.afterhours.sandhaulers",
+    "live": false,
+    "genre": "Puzzle",
+    "line": "Swipe a picture made of sand and fill every toy truck with its own colour.",
+    "about": "Every level is a picture made of coloured sand. Swipe to carve it and the grains pour down to the road, where dump trucks collect only the sand of their colour. Fill every truck to clear the picture, but keep the container from overflowing.",
+    "highlights": [
+      "Satisfying sand that slides, pours and settles",
+      "Cute toy trucks looping the road below",
+      "Plan which part to dig first so each colour reaches its truck"
+    ],
+    "video": ""
+  },
+  {
     "slug": "sheep-loop",
     "name": "Sheep Loop",
     "store_name": "Sheep Loop: Flock Sort Puzzle",
