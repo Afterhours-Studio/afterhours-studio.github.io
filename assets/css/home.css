@@ -96,9 +96,12 @@ h1, h2, h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.02
 .play { white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; border-radius: 12px; background: var(--ink); color: var(--paper); font-weight: 700; font-size: 14px; }
 .play svg { width: 20px; height: 20px; }
 
-/* In development */
-.dev { padding: 96px 0; background: var(--sunk); border-block: 1px solid var(--line); }
-.dev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+/* More games: one row that scrolls sideways */
+.more-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 64px 0 20px; }
+.more-head h2 { font-size: clamp(24px, 2.6vw, 30px); }
+.more-head p { color: var(--muted); margin: 0; font-size: 15px; }
+.more-row { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, calc((100% - 3 * 20px) / 4)); gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; padding: 4px 4px 18px; margin: -4px -4px 0; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+.more-row > a { scroll-snap-align: start; }
 .dev-card { border-radius: 22px; overflow: hidden; background: var(--raised); border: 1px solid var(--line); transition: transform .2s ease, box-shadow .2s ease; }
 .dev-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
 .dev-card .art { aspect-ratio: 4 / 3; overflow: hidden; position: relative; }
@@ -150,7 +153,9 @@ footer .small { color: var(--muted); font-size: 14px; margin-top: 14px; white-sp
   .nav .btn { padding: 9px 14px; }
   .hero { padding-top: 48px; }
   .stats { gap: 24px; }
-  .live-grid, .dev-grid, .pillars { grid-template-columns: 1fr; }
+  .live-grid, .pillars { grid-template-columns: 1fr; }
+  .more-head { flex-direction: column; gap: 4px; margin-top: 48px; }
+  .more-row { grid-auto-columns: 78%; }
   .float { width: 64px; height: 64px; border-radius: 16px; }
   .float.a, .float.c { left: -24px; } .float.b { right: -24px; }
   .phone { width: 240px; }

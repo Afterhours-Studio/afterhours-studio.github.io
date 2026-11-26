@@ -1,15 +1,17 @@
 """Build the home page game sections and the per-game pages from tools/games.json.
 
-One source for every game, so the home page (stats, "Play today" for live games, "Coming
-soon" for the rest, footer links) and the page at /games/<slug>/ never drift apart. The
+One source for every game, so the home page (stats, the featured highlights, the scrolling
+row of the other games, footer links) and the page at /games/<slug>/ never drift apart. The
 home page is styled by assets/css/home.css, the game pages by assets/css/site.css. Edit
 games.json, then run:
 
     python tools/build_games.py
     python tools/stamp_css.py      # only when a stylesheet in assets/css/ changed
 
-games.json fields: slug, name, store_name, package, live (true = "Play today" on the home
-page and "Maintained" on its page; false = "Coming soon" / "In development"), genre, line
+games.json fields: slug, name, store_name, package, live (true = Google Play button and
+"Maintained" on its page; false = "In development"), featured (true = one of the big
+highlight cards on the home page, keep it to three; the rest go in the scrolling "More
+games" row), genre, line
 (one sentence on the home page card), about (two or three sentences on its page),
 highlights (two or three short points listed under it), video. Art lives in assets/games/<slug>/ (icon.webp 256 px, feature.webp
 1024x500).
@@ -97,6 +99,16 @@ def dev_games() -> list:
     return [g for g in GAMES if not g["live"]]
 
 
+def featured_games() -> list:
+    return [g for g in GAMES if g.get("featured")]
+
+
+def more_games() -> list:
+    """Every game that is not featured: live ones first, then those in development."""
+    rest = [g for g in GAMES if not g.get("featured")]
+    return [g for g in rest if g["live"]] + [g for g in rest if not g["live"]]
+
+
 def stats() -> str:
     """The three numbers under the hero."""
     rows = [(len(GAMES), "games made"), (len(live_games()), "live on Google Play"), (len(dev_games()), "coming soon")]
@@ -104,30 +116,39 @@ def stats() -> str:
     return f'        <div class="stats">{cells}</div>'
 
 
-def live_cards() -> str:
-    """Play today: feature art, icon, genre and the Google Play button of every live game."""
+def featured_cards() -> str:
+    """The highlight row (games.json "featured"): feature art, icon, genre and the Google Play button."""
     out = []
-    for g in live_games():
+    for g in featured_games():
         slug = g["slug"]
+        if g["live"]:
+            chip_html = '<span class="chip on">Live</span>'
+            action = (
+                f'<a class="play" href="https://play.google.com/store/apps/details?id={g["package"]}" '
+                f'rel="noopener">{PLAY_ICON}Get it on Google Play</a>'
+            )
+        else:
+            chip_html = '<span class="chip">In development</span>'
+            action = f'<a class="play" href="/games/{slug}/">See the game</a>'
         out.append(f"""        <article class="live-card">
           <a class="art" href="/games/{slug}/"><img src="/assets/games/{slug}/feature.webp" alt="{e(g['name'])} feature art" width="1024" height="500" loading="lazy"></a>
           <div class="body">
             <img class="icon" src="/assets/games/{slug}/icon.webp" alt="{e(g['name'])} app icon" width="72" height="72">
             <div>
-              <div class="meta"><span class="chip on">Live</span>{e(g['genre'])}</div>
+              <div class="meta">{chip_html}{e(g['genre'])}</div>
               <h3><a href="/games/{slug}/">{e(g['name'])}</a></h3>
               <p>{e(g['line'])}</p>
-              <a class="play" href="https://play.google.com/store/apps/details?id={g['package']}" rel="noopener">{PLAY_ICON}Get it on Google Play</a>
+              {action}
             </div>
           </div>
         </article>""")
     return "\n".join(out)
 
 
-def dev_cards() -> str:
-    """Coming soon: gameplay clip (or feature art) and a line for every game in development."""
+def more_cards() -> str:
+    """The scrolling row under the highlights: every other game; only games in development carry a chip."""
     out = []
-    for g in dev_games():
+    for g in more_games():
         slug = g["slug"]
         if g.get("video"):
             poster = f"/assets/games/{slug}/gameplay.webp"
@@ -138,8 +159,9 @@ def dev_cards() -> str:
             )
         else:
             art = f'<img src="/assets/games/{slug}/feature.webp" alt="{e(g["name"])} feature art" loading="lazy">'
+        chip_html = "" if g["live"] else '<span class="chip">In development</span>'
         out.append(f"""        <a class="dev-card" href="/games/{slug}/">
-          <div class="art">{art}<span class="chip">In development</span></div>
+          <div class="art">{art}{chip_html}</div>
           <div class="body">
             <div class="row"><img src="/assets/games/{slug}/icon.webp" alt="{e(g['name'])} app icon" width="40" height="40" loading="lazy"><div><h3>{e(g['name'])}</h3><span class="genre">{e(g['genre'])}</span></div></div>
             <p>{e(g['line'])}</p>
@@ -235,8 +257,8 @@ def main() -> None:
     index_path = ROOT / "index.html"
     index = index_path.read_text(encoding="utf-8")
     index = replace_block(index, "STATS", stats())
-    index = replace_block(index, "LIVE", live_cards())
-    index = replace_block(index, "DEV", dev_cards())
+    index = replace_block(index, "FEATURED", featured_cards())
+    index = replace_block(index, "MORE", more_cards())
     index = replace_block(index, "FOOTGAMES", foot_games())
     index_path.write_text(index, encoding="utf-8", newline="")
 
