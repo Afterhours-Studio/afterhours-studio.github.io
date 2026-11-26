@@ -1,7 +1,8 @@
 """Build the home page game sections and the per-game pages from tools/games.json.
 
 One source for every game, so the home page (stats, the featured highlights, the scrolling
-row of the other games, footer links) and the page at /games/<slug>/ never drift apart. The
+row of the other games, footer links) and the page at /games/<slug>/ never drift apart. Clicking a game card on the home page opens
+that game in a modal (the same card as its page); the link still works without script. The
 home page is styled by assets/css/home.css, the game pages by assets/css/site.css. Edit
 games.json, then run:
 
@@ -56,7 +57,7 @@ def media(g: dict) -> str:
 
 
 def card(g: dict, heading: str) -> str:
-    """Body of a game page: head, then the media beside (or above) the text."""
+    """Body shared by the home page modal and the game page: head, then the media beside (or above) the text."""
     play_url = f"https://play.google.com/store/apps/details?id={g['package']}"
     note = "" if g["live"] else '<p class="note">The Google Play link works once the game is published.</p>'
     layout = "card-body has-video" if g.get("video") else "card-body"
@@ -131,12 +132,12 @@ def featured_cards() -> str:
             chip_html = '<span class="chip">In development</span>'
             action = f'<a class="play" href="/games/{slug}/">See the game</a>'
         out.append(f"""        <article class="live-card">
-          <a class="art" href="/games/{slug}/"><img src="/assets/games/{slug}/feature.webp" alt="{e(g['name'])} feature art" width="1024" height="500" loading="lazy"></a>
+          <a class="art" href="/games/{slug}/" data-game="{slug}"><img src="/assets/games/{slug}/feature.webp" alt="{e(g['name'])} feature art" width="1024" height="500" loading="lazy"></a>
           <div class="body">
             <img class="icon" src="/assets/games/{slug}/icon.webp" alt="{e(g['name'])} app icon" width="72" height="72">
             <div>
               <div class="meta">{chip_html}{e(g['genre'])}</div>
-              <h3><a href="/games/{slug}/">{e(g['name'])}</a></h3>
+              <h3><a href="/games/{slug}/" data-game="{slug}">{e(g['name'])}</a></h3>
               <p>{e(g['line'])}</p>
               {action}
             </div>
@@ -156,7 +157,7 @@ def more_cards() -> str:
             'loading="lazy">'
         )
         chip_html = "" if g["live"] else '<span class="chip">In development</span>'
-        out.append(f"""        <a class="dev-card" href="/games/{slug}/">
+        out.append(f"""        <a class="dev-card" href="/games/{slug}/" data-game="{slug}">
           <div class="art">{art}{chip_html}</div>
           <div class="body">
             <div class="row"><img src="/assets/games/{slug}/icon.webp" alt="{e(g['name'])} app icon" width="40" height="40" loading="lazy"><div><h3>{e(g['name'])}</h3><span class="genre">{e(g['genre'])}</span></div></div>
@@ -170,6 +171,49 @@ def foot_games() -> str:
     links = [f'<li><a href="/games/{g["slug"]}/">{e(g["name"])}</a></li>' for g in live_games()]
     links.append('<li><a href="#games">All games</a></li>')
     return "\n".join("      " + link for link in links)
+
+
+MODAL_SCRIPT = """<script>
+(() => {
+  const dialog = document.getElementById("game-modal");
+  const body = dialog.querySelector(".game-modal-body");
+  const open = (slug) => {
+    const tpl = document.getElementById("game-" + slug);
+    if (!tpl || typeof dialog.showModal !== "function") return false;
+    body.replaceChildren(tpl.content.cloneNode(true));
+    dialog.showModal();
+    history.replaceState(null, "", "#" + slug);
+    return true;
+  };
+  document.querySelectorAll("a[data-game]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (open(link.dataset.game)) event.preventDefault();
+    });
+  });
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+  dialog.querySelector(".game-modal-close").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("close", () => {
+    body.replaceChildren();
+    history.replaceState(null, "", location.pathname + location.search);
+  });
+  const fromHash = () => { const slug = location.hash.slice(1); if (slug && !dialog.open) open(slug); };
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+})();
+</script>"""
+
+
+def modal() -> str:
+    templates = "\n".join(
+        f'<template id="game-{g["slug"]}">\n    {card(g, "h2")}\n</template>' for g in GAMES
+    )
+    return f"""<dialog class="game-modal" id="game-modal" aria-label="Game details">
+  <button class="game-modal-close" type="button" aria-label="Close">&times;</button>
+  <div class="game-modal-body"></div>
+</dialog>
+{templates}
+{MODAL_SCRIPT}"""
 
 
 def replace_block(text: str, name: str, content: str) -> str:
@@ -256,6 +300,7 @@ def main() -> None:
     index = replace_block(index, "FEATURED", featured_cards())
     index = replace_block(index, "MORE", more_cards())
     index = replace_block(index, "FOOTGAMES", foot_games())
+    index = replace_block(index, "MODAL", modal())
     index_path.write_text(index, encoding="utf-8", newline="")
 
     foot = PAGE_FOOT
