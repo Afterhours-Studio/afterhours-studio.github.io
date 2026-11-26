@@ -48,7 +48,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.02
 .nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); background: color-mix(in srgb, var(--paper) 82%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
 .brand { display: flex; align-items: center; gap: 12px; font: 600 20px/1 var(--display); }
-.brand img { width: 34px; height: 34px; border-radius: 9px; }
+.brand img { width: 34px; height: 34px; filter: invert(1); }
+@media (prefers-color-scheme: dark) { .brand img { filter: none; } }
 .nav nav { display: flex; align-items: center; gap: 28px; font-weight: 600; font-size: 15px; }
 .nav nav a:not(.btn) { color: var(--muted); }
 .nav nav a:not(.btn):hover { color: var(--ink); }
