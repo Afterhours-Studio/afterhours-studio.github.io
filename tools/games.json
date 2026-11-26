@@ -36,7 +36,7 @@
     "name": "Purlfect Pixels",
     "store_name": "Purlfect Pixels: Knit Puzzle",
     "package": "com.afterhours.purlfectpixels",
-    "live": false,
+    "live": true,
     "genre": "Puzzle",
     "line": "Unravel yarn, fill the holes and knit cozy pixel art in a relaxing wool puzzle.",
     "about": "Every level is a knitted picture with its yarn in the wrong places. Unravel the wrong stitches onto a spool, then knit them back where they belong until the picture is perfect.",

@@ -1,4 +1,4 @@
-"""Stamp the stylesheet link on every page with the stylesheet's own hash.
+"""Stamp each stylesheet link (site.css, home.css) on every page with that stylesheet's own hash.
 
 GitHub Pages serves assets/css/site.css with a cache lifetime, so a browser
 that has visited before keeps running the old stylesheet after a deploy: the
@@ -15,22 +15,21 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CSS = ROOT / "assets" / "css" / "site.css"
-LINK = re.compile(r'(href="/assets/css/site\.css)(\?v=[0-9a-f]+)?(")')
-
-digest = hashlib.sha256(CSS.read_bytes()).hexdigest()[:10]
+SHEETS = ("site.css", "home.css")
 changed = []
 
-for page in sorted(ROOT.glob("**/*.html")):
-    text = page.read_text(encoding="utf-8")
-    stamped, n = LINK.subn(rf'\1?v={digest}\3', text)
-    if n == 0:
-        continue
-    if stamped != text:
-        page.write_text(stamped, encoding="utf-8", newline="")
-        changed.append(page.relative_to(ROOT).as_posix())
-
-print(f"site.css {digest}")
+for sheet in SHEETS:
+    digest = hashlib.sha256((ROOT / "assets" / "css" / sheet).read_bytes()).hexdigest()[:10]
+    link = re.compile(rf'(href="/assets/css/{re.escape(sheet)})(\?v=[0-9a-f]+)?(")')
+    for page in sorted(ROOT.glob("**/*.html")):
+        if "mockup" in page.parts:
+            continue
+        text = page.read_text(encoding="utf-8")
+        stamped, n = link.subn(rf"\1?v={digest}\3", text)
+        if n and stamped != text:
+            page.write_text(stamped, encoding="utf-8", newline="")
+            changed.append(page.relative_to(ROOT).as_posix())
+    print(f"{sheet} {digest}")
 if changed:
     print("stamped: " + ", ".join(changed))
 else:

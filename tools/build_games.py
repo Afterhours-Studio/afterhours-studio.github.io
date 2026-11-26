@@ -1,18 +1,21 @@
-"""Build the games list, the game modal and the per-game pages from tools/games.json.
+"""Build the home page game sections and the per-game pages from tools/games.json.
 
-One source for every game, so the plate on the home page, the modal it opens and the
-page at /games/<slug>/ never drift apart. Edit games.json, then run:
+One source for every game, so the home page (stats, "Play today" for live games, "Coming
+soon" for the rest, footer links) and the page at /games/<slug>/ never drift apart. The
+home page is styled by assets/css/home.css, the game pages by assets/css/site.css. Edit
+games.json, then run:
 
     python tools/build_games.py
-    python tools/stamp_css.py      # only when assets/css/site.css changed
+    python tools/stamp_css.py      # only when a stylesheet in assets/css/ changed
 
-games.json fields: slug, name, store_name, package, live (true = "Maintained", false =
-"In development"), genre, line (one sentence on the plate), about (two or three sentences
-in the modal), highlights (two or three short points listed under it), video. Art lives in assets/games/<slug>/ (icon.webp 256 px, feature.webp
+games.json fields: slug, name, store_name, package, live (true = "Play today" on the home
+page and "Maintained" on its page; false = "Coming soon" / "In development"), genre, line
+(one sentence on the home page card), about (two or three sentences on its page),
+highlights (two or three short points listed under it), video. Art lives in assets/games/<slug>/ (icon.webp 256 px, feature.webp
 1024x500).
 
 video: "" shows the feature art only; a path such as "/assets/games/<slug>/gameplay.mp4"
-shows that 9:16 gameplay clip (muted, looping, autoplay when the card opens), with
+shows that 9:16 gameplay clip (muted, looping, autoplay), with
 assets/games/<slug>/gameplay.webp as its poster when present. Encode clips with
 tools/encode_gameplay.sh.
 """
@@ -24,13 +27,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 GAMES = json.loads((ROOT / "tools" / "games.json").read_text(encoding="utf-8"))
 SITE = "https://afterhours-studio.github.io"
-
-ARROW = (
-    '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" '
-    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'
-    '<path d="M4 10h11M10.5 5.5 15 10l-4.5 4.5"/></svg>'
-)
-
 
 def e(text: str) -> str:
     return html.escape(text, quote=True)
@@ -58,7 +54,7 @@ def media(g: dict) -> str:
 
 
 def card(g: dict, heading: str) -> str:
-    """Body shared by the modal and the page: head, then the media beside (or above) the text."""
+    """Body of a game page: head, then the media beside (or above) the text."""
     play_url = f"https://play.google.com/store/apps/details?id={g['package']}"
     note = "" if g["live"] else '<p class="note">The Google Play link works once the game is published.</p>'
     layout = "card-body has-video" if g.get("video") else "card-body"
@@ -86,65 +82,76 @@ def card(g: dict, heading: str) -> str:
     </div>"""
 
 
-def plates() -> str:
+PLAY_ICON = (
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4 3.5v17l9.2-8.5L4 '
+    '3.5Zm10.4 9.6 2.6 2.4-10.7 6.1 8.1-8.5Zm0-2.2L6.3 2.4 17 8.5l-2.6 2.4Zm4.2-1.5 2.9 1.7c.7.4.7 1.4 0 1.8l-2.9 '
+    '1.7-2.8-2.6 2.8-2.6Z"/></svg>'
+)
+
+
+def live_games() -> list:
+    return [g for g in GAMES if g["live"]]
+
+
+def dev_games() -> list:
+    return [g for g in GAMES if not g["live"]]
+
+
+def stats() -> str:
+    """The three numbers under the hero."""
+    rows = [(len(GAMES), "games made"), (len(live_games()), "live on Google Play"), (len(dev_games()), "coming soon")]
+    cells = "".join(f"<div><b>{n}</b><span>{label}</span></div>" for n, label in rows)
+    return f'        <div class="stats">{cells}</div>'
+
+
+def live_cards() -> str:
+    """Play today: feature art, icon, genre and the Google Play button of every live game."""
     out = []
-    for g in GAMES:
-        out.append(f"""      <a class="plate" href="/games/{g['slug']}/" data-game="{g['slug']}">
-        <img src="/assets/games/{g['slug']}/icon.webp" alt="{e(g['name'])} app icon" width="76" height="76" loading="lazy">
-        <div>
-          <div class="plate-top">
-            <span class="chip">{chip(g)}</span>
-            <span class="go">{ARROW}</span>
+    for g in live_games():
+        slug = g["slug"]
+        out.append(f"""        <article class="live-card">
+          <a class="art" href="/games/{slug}/"><img src="/assets/games/{slug}/feature.webp" alt="{e(g['name'])} feature art" width="1024" height="500" loading="lazy"></a>
+          <div class="body">
+            <img class="icon" src="/assets/games/{slug}/icon.webp" alt="{e(g['name'])} app icon" width="72" height="72">
+            <div>
+              <div class="meta"><span class="chip on">Live</span>{e(g['genre'])}</div>
+              <h3><a href="/games/{slug}/">{e(g['name'])}</a></h3>
+              <p>{e(g['line'])}</p>
+              <a class="play" href="https://play.google.com/store/apps/details?id={g['package']}" rel="noopener">{PLAY_ICON}Get it on Google Play</a>
+            </div>
           </div>
-          <h2>{e(g['name'])}</h2>
-          <p>{e(g['line'])}</p>
-        </div>
-      </a>
-""")
+        </article>""")
     return "\n".join(out)
 
 
-MODAL_SCRIPT = """<script>
-(() => {
-  const dialog = document.getElementById("game-modal");
-  const body = dialog.querySelector(".game-modal-body");
-  const open = (slug) => {
-    const tpl = document.getElementById("game-" + slug);
-    if (!tpl || typeof dialog.showModal !== "function") return false;
-    body.replaceChildren(tpl.content.cloneNode(true));
-    dialog.showModal();
-    history.replaceState(null, "", "#" + slug);
-    return true;
-  };
-  document.querySelectorAll("a.plate[data-game]").forEach((plate) => {
-    plate.addEventListener("click", (event) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      if (open(plate.dataset.game)) event.preventDefault();
-    });
-  });
-  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
-  dialog.querySelector(".game-modal-close").addEventListener("click", () => dialog.close());
-  dialog.addEventListener("close", () => {
-    body.replaceChildren();
-    history.replaceState(null, "", location.pathname + location.search);
-  });
-  const fromHash = () => { const slug = location.hash.slice(1); if (slug && !dialog.open) open(slug); };
-  window.addEventListener("hashchange", fromHash);
-  fromHash();
-})();
-</script>"""
+def dev_cards() -> str:
+    """Coming soon: gameplay clip (or feature art) and a line for every game in development."""
+    out = []
+    for g in dev_games():
+        slug = g["slug"]
+        if g.get("video"):
+            poster = f"/assets/games/{slug}/gameplay.webp"
+            poster_attr = f' poster="{poster}"' if (ROOT / poster.lstrip("/")).exists() else ""
+            art = (
+                f'<video src="{e(g["video"])}"{poster_attr} autoplay muted loop playsinline preload="metadata" '
+                f'aria-label="{e(g["name"])} gameplay"></video>'
+            )
+        else:
+            art = f'<img src="/assets/games/{slug}/feature.webp" alt="{e(g["name"])} feature art" loading="lazy">'
+        out.append(f"""        <a class="dev-card" href="/games/{slug}/">
+          <div class="art">{art}<span class="chip">In development</span></div>
+          <div class="body">
+            <div class="row"><img src="/assets/games/{slug}/icon.webp" alt="{e(g['name'])} app icon" width="40" height="40" loading="lazy"><div><h3>{e(g['name'])}</h3><span class="genre">{e(g['genre'])}</span></div></div>
+            <p>{e(g['line'])}</p>
+          </div>
+        </a>""")
+    return "\n".join(out)
 
 
-def modal() -> str:
-    templates = "\n".join(
-        f'<template id="game-{g["slug"]}">\n    {card(g, "h2")}\n</template>' for g in GAMES
-    )
-    return f"""<dialog class="game-modal" id="game-modal" aria-label="Game details">
-  <button class="game-modal-close" type="button" aria-label="Close">&times;</button>
-  <div class="game-modal-body"></div>
-</dialog>
-{templates}
-{MODAL_SCRIPT}"""
+def foot_games() -> str:
+    links = [f'<li><a href="/games/{g["slug"]}/">{e(g["name"])}</a></li>' for g in live_games()]
+    links.append('<li><a href="#games">All games</a></li>')
+    return "\n".join("      " + link for link in links)
 
 
 def replace_block(text: str, name: str, content: str) -> str:
@@ -210,15 +217,30 @@ PAGE_HEAD = """<!doctype html>
 """.replace("SITE", SITE)
 
 
+PAGE_FOOT = """<footer class="shell">
+  <p class="footer-links">
+    <a href="mailto:support@aftergamelab.com">Contact</a>
+    <a href="https://github.com/Afterhours-Studio" rel="noopener">GitHub</a>
+    <a class="to-top" href="#top">Back to top<svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 16V5M4.5 10.5 10 5l5.5 5.5"/></svg></a>
+  </p>
+  <p class="colophon">Afterhours Studio. Mobile games for Android, with iOS to follow.</p>
+</footer>
+
+</body>
+</html>
+"""
+
+
 def main() -> None:
     index_path = ROOT / "index.html"
     index = index_path.read_text(encoding="utf-8")
-    index = replace_block(index, "GAMES", plates().rstrip("\n"))
-    index = replace_block(index, "MODAL", modal())
+    index = replace_block(index, "STATS", stats())
+    index = replace_block(index, "LIVE", live_cards())
+    index = replace_block(index, "DEV", dev_cards())
+    index = replace_block(index, "FOOTGAMES", foot_games())
     index_path.write_text(index, encoding="utf-8", newline="")
 
-    foot = index[index.index("<footer") :]
-    foot = foot[: foot.index("</footer>") + len("</footer>")] + "\n\n</body>\n</html>\n"
+    foot = PAGE_FOOT
     for g in GAMES:
         out = ROOT / "games" / g["slug"] / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
