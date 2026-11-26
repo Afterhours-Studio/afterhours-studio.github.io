@@ -104,7 +104,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.02
 .more-row > a { scroll-snap-align: start; }
 .dev-card { border-radius: 22px; overflow: hidden; background: var(--raised); border: 1px solid var(--line); transition: transform .2s ease, box-shadow .2s ease; }
 .dev-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
-.dev-card .art { aspect-ratio: 4 / 3; overflow: hidden; position: relative; }
+.dev-card .art { aspect-ratio: 1024 / 500; overflow: hidden; position: relative; }
 .dev-card .art img, .dev-card .art video { width: 100%; height: 100%; object-fit: cover; }
 .dev-card .art .chip { position: absolute; left: 12px; top: 12px; backdrop-filter: blur(8px); background: color-mix(in srgb, var(--raised) 85%, transparent); }
 .dev-card .body { padding: 18px 18px 22px; }

@@ -146,19 +146,15 @@ def featured_cards() -> str:
 
 
 def more_cards() -> str:
-    """The scrolling row under the highlights: every other game; only games in development carry a chip."""
+    """The scrolling row under the highlights: every other game, feature art shown whole; only games in development
+    carry a chip."""
     out = []
     for g in more_games():
         slug = g["slug"]
-        if g.get("video"):
-            poster = f"/assets/games/{slug}/gameplay.webp"
-            poster_attr = f' poster="{poster}"' if (ROOT / poster.lstrip("/")).exists() else ""
-            art = (
-                f'<video src="{e(g["video"])}"{poster_attr} autoplay muted loop playsinline preload="metadata" '
-                f'aria-label="{e(g["name"])} gameplay"></video>'
-            )
-        else:
-            art = f'<img src="/assets/games/{slug}/feature.webp" alt="{e(g["name"])} feature art" loading="lazy">'
+        art = (
+            f'<img src="/assets/games/{slug}/feature.webp" alt="{e(g["name"])} feature art" width="1024" height="500" '
+            'loading="lazy">'
+        )
         chip_html = "" if g["live"] else '<span class="chip">In development</span>'
         out.append(f"""        <a class="dev-card" href="/games/{slug}/">
           <div class="art">{art}{chip_html}</div>
