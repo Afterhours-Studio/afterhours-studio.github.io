@@ -1,4 +1,4 @@
-"""Stamp each stylesheet link (site.css, home.css) on every page with that stylesheet's own hash.
+"""Stamp each stylesheet link (site.css) on every page with that stylesheet's own hash.
 
 GitHub Pages serves assets/css/site.css with a cache lifetime, so a browser
 that has visited before keeps running the old stylesheet after a deploy: the
@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SHEETS = ("site.css", "home.css")
+SHEETS = ("site.css",)
 changed = []
 
 for sheet in SHEETS:

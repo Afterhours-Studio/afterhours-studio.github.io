@@ -1,526 +1,233 @@
-/* Afterhours Studio site styles.
-   One stylesheet for the home page and the per-game press kits. No build step,
-   no framework, no JavaScript: GitHub Pages serves these files as they are.
-   Fonts are self-hosted so the site makes no third-party request, which is what
-   the privacy policy says. */
-
-@font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-var-latin.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-    U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: "Karla";
-  src: url("../fonts/karla-var-latin.woff2") format("woff2-variations");
-  font-weight: 200 800;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-    U+2212, U+2215, U+FEFF, U+FFFD;
-}
+/* The one stylesheet for every page: home, /games/<slug>/, privacy and terms.
+   Header, footer, game cards, stats and the game modal are built by tools/build_games.py
+   from tools/games.json; run tools/stamp_css.py after changing this file. */
+@font-face { font-family: "Fraunces"; src: url("/assets/fonts/fraunces-var-latin.woff2") format("woff2-variations"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Karla"; src: url("/assets/fonts/karla-var-latin.woff2") format("woff2-variations"); font-weight: 200 800; font-display: swap; }
 
 :root {
-  --paper: #faf7f2;
-  --raised: #fffdfa;
-  --ink: #1d1b17;
-  --muted: #6b655c;
-  --line: #e3dcd0;
-  --accent: #a94f28;
-  --accent-soft: #f2e4d9;
-  --code-bg: #f1ebe1;
-  --shadow: 0 1px 2px rgba(40, 30, 16, .05), 0 12px 28px -18px rgba(40, 30, 16, .35);
-  --grain: .035;
-  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --paper: #faf7f2; --raised: #fffdfa; --sunk: #f1ebe1;
+  --ink: #1d1b17; --muted: #6b655c; --line: #e3dcd0;
+  --accent: #a94f28; --accent-ink: #fff8f2; --accent-soft: #f2e4d9;
+  --live: #2f7d4f; --live-soft: #dcefe3;
+  --glow: rgba(169, 79, 40, .18);
+  --shadow: 0 1px 2px rgba(40,30,16,.06), 0 24px 48px -28px rgba(40,30,16,.45);
+  --display: "Fraunces", Georgia, serif;
   --body: "Karla", "Segoe UI", Helvetica, Arial, sans-serif;
-  --gutter: 20px;
-  --measure: 62ch;
+  --wrap: 1440px;
+  --gutter: clamp(16px, 4vw, 48px);
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #14120f;
-    --raised: #1c1915;
-    --ink: #ece7dd;
-    --muted: #9b9388;
-    --line: #2e2922;
-    --accent: #e39566;
-    --accent-soft: #2a211a;
-    --code-bg: #221e18;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 14px 30px -20px rgba(0, 0, 0, .9);
-    --grain: .05;
+    --paper: #13110e; --raised: #1c1915; --sunk: #191612;
+    --ink: #efe9df; --muted: #9d958a; --line: #2e2922;
+    --accent: #e8986a; --accent-ink: #1a110b; --accent-soft: #2b2119;
+    --live: #7fd3a0; --live-soft: #17281e;
+    --glow: rgba(232, 152, 106, .16);
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 28px 56px -30px rgba(0,0,0,.95);
   }
 }
 
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--body); overflow-x: hidden; }
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+.wrap { width: min(var(--wrap), 100% - 2 * var(--gutter)); margin-inline: auto; }
 
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+.eyebrow { font: 700 12px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.02em; margin: 0; }
+.section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
+.section-head h2 { font-size: clamp(30px, 4vw, 44px); line-height: 1.05; }
+.section-head p { color: var(--muted); margin: 10px 0 0; }
 
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font: 400 17px/1.65 var(--body);
-  font-variant-numeric: tabular-nums;
-  overflow-x: hidden;
-}
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 999px; font-weight: 700; font-size: 15px; border: 1px solid var(--line); background: var(--raised); transition: transform .15s ease, background .15s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.btn svg { width: 18px; height: 18px; }
 
-/* A single tiling grain sheet keeps the flat background from reading as a
-   screenshot of a document. It is one inline SVG, so no extra request. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: var(--grain);
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
-}
+/* Nav */
+.nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); background: color-mix(in srgb, var(--paper) 82%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.brand { display: flex; align-items: center; gap: 12px; font: 600 20px/1 var(--display); }
+.brand img { width: 34px; height: 34px; filter: invert(1); }
+@media (prefers-color-scheme: dark) { .brand img { filter: none; } }
+.nav nav { display: flex; align-items: center; gap: 28px; font-weight: 600; font-size: 15px; }
+.nav nav a:not(.btn) { color: var(--muted); }
+.nav nav a:not(.btn):hover { color: var(--ink); }
+.nav .btn { padding: 9px 18px; }
 
-a { color: inherit; }
-a:focus-visible,
-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+/* Hero */
+.hero { position: relative; padding: 72px 0 96px; }
+.hero::before { content: ""; position: absolute; inset: -120px 0 auto; height: 720px; background: radial-gradient(600px 380px at 78% 40%, var(--glow), transparent 70%); pointer-events: none; z-index: -1; }
+.hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; }
+.hero h1 { font-size: clamp(44px, 6.4vw, 84px); line-height: .98; }
+.hero h1 em { font-style: italic; color: var(--accent); font-weight: 500; }
+.hero .lede { font-size: 20px; color: var(--muted); max-width: 40ch; margin: 24px 0 34px; }
+.hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.stats { display: flex; gap: 40px; margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
+.stats b { display: block; font: 600 34px/1 var(--display); }
+.stats span { color: var(--muted); font-size: 14px; }
 
-img { display: block; max-width: 100%; height: auto; }
+.showcase { position: relative; justify-self: center; }
+.phone { width: 290px; aspect-ratio: 9 / 19.5; border-radius: 44px; padding: 10px; background: #0d0c0a; box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,.06) inset; }
+.phone video { width: 100%; height: 100%; object-fit: cover; border-radius: 34px; }
+.float { position: absolute; width: 84px; height: 84px; border-radius: 22px; box-shadow: var(--shadow); animation: bob 6s ease-in-out infinite; }
+.float.a { left: -70px; top: 14%; }
+.float.b { right: -64px; top: 38%; animation-delay: -2s; }
+.float.c { left: -40px; bottom: 10%; animation-delay: -4s; }
+@keyframes bob { 50% { transform: translateY(-12px) rotate(-2deg); } }
 
-.shell { width: 100%; max-width: 760px; margin: 0 auto; padding: 0 var(--gutter); }
+/* Live games */
+.live { padding: 40px 0 96px; }
+.live-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.live-card { position: relative; border-radius: 28px; overflow: hidden; background: var(--raised); border: 1px solid var(--line); box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.live-card .art { aspect-ratio: 1024 / 500; overflow: hidden; }
+.live-card .art img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.live-card:hover .art img { transform: scale(1.04); }
+.live-card .body { display: grid; gap: 14px; padding: 0 24px 24px; align-items: start; }
+.live-card .icon { position: relative; z-index: 1; width: 72px; height: 72px; border-radius: 18px; margin-top: -36px; border: 4px solid var(--raised); box-shadow: var(--shadow); }
+.live-card h3 { font-size: 26px; }
+.live-card h3 a:hover { color: var(--accent); }
+.live-card p { color: var(--muted); margin: 6px 0 18px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 700 11px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.chip.on { background: var(--live-soft); color: var(--live); }
+.chip.on::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sep { display: inline-block; width: 1px; height: .85em; margin: 0 .6em; background: currentColor; opacity: .4; vertical-align: -.08em; }
+.meta .sep { margin: 0; }
+.meta { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; color: var(--muted); font-size: 14px; }
+.play { white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; border-radius: 12px; background: var(--ink); color: var(--paper); font-weight: 700; font-size: 14px; }
+.play svg { width: 20px; height: 20px; }
 
-/* --- masthead ---------------------------------------------------------- */
+/* More games: one row that scrolls sideways */
+.more-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 64px 0 20px; }
+.more-head h2 { font-size: clamp(24px, 2.6vw, 30px); }
+.more-head p { color: var(--muted); margin: 0; font-size: 15px; }
+.more-row { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, calc((100% - 3 * 20px) / 4)); gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; padding: 4px 4px 18px; margin: -4px -4px 0; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+.more-row > a { scroll-snap-align: start; }
+.dev-card { border-radius: 22px; overflow: hidden; background: var(--raised); border: 1px solid var(--line); transition: transform .2s ease, box-shadow .2s ease; }
+.dev-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.dev-card .art { aspect-ratio: 1024 / 500; overflow: hidden; position: relative; }
+.dev-card .art img, .dev-card .art video { width: 100%; height: 100%; object-fit: cover; }
+.dev-card .art .chip { position: absolute; left: 12px; top: 12px; backdrop-filter: blur(8px); background: color-mix(in srgb, var(--raised) 85%, transparent); }
+.dev-card .body { padding: 18px 18px 22px; }
+.dev-card .row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.dev-card .row img { width: 40px; height: 40px; border-radius: 11px; }
+.dev-card h3 { font-size: 20px; }
+.dev-card .genre { color: var(--muted); font-size: 13px; }
+.dev-card p { color: var(--muted); font-size: 15px; margin: 0; }
 
-.masthead {
-  display: flex;
-  /* Centred, not baseline: the wordmark carries the logo as a ::before box,
-     which has no text baseline of its own and dragged the row out of line. */
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px 24px;
-  flex-wrap: nowrap;
-  /* Keep the shell's side gutter: a bare `padding: 28px 0 0` would override it
-     and let the nav run into the edge of a phone screen. */
-  padding: 28px var(--gutter) 0;
-}
-.wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--display);
-  font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 24;
-  font-weight: 600;
-  font-size: 19px;
-  letter-spacing: -.01em;
-  text-decoration: none;
-}
-/* The studio mark ships as a cream monogram drawn for a dark splash screen.
-   Masking it instead of showing the file lets the page tint it, so it stays
-   legible on paper and on ink. */
-.wordmark::before {
-  content: "";
-  width: 23px;
-  height: 23px;
-  flex: none;
-  background: currentColor;
-  -webkit-mask: url("../brand/logo-mark.png") center / contain no-repeat;
-  mask: url("../brand/logo-mark.png") center / contain no-repeat;
-}
+/* Studio: story on the left, the three pillars stacked on the right at equal heights */
+.studio { padding: 110px 0; }
+.studio .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: stretch; }
+.studio h2 { font-size: clamp(28px, 3.2vw, 40px); line-height: 1.08; margin-bottom: 24px; }
+.studio .copy p:not(.eyebrow) { color: var(--muted); font-size: 18px; margin: 0 0 16px; max-width: 60ch; }
+.pillars { display: grid; grid-template-rows: repeat(3, 1fr); gap: 16px; }
+.pillar { display: flex; align-items: center; gap: 20px; padding: 22px 26px; border-radius: 20px; border: 1px solid var(--line); background: var(--raised); }
+.pillar .n { font: 600 22px/1 var(--display); color: var(--accent); flex-shrink: 0; width: 2ch; }
+.pillar h3 { font-size: 19px; margin: 0 0 4px; }
+.pillar p { font-size: 15px; color: var(--muted); margin: 0; }
 
-/* The mark sits at the right edge of the studio name, so the two read as one
-   lockup across the measure rather than as a stacked logo. */
-.hero-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin: 0 0 20px;
-}
-.hero-row h1 { margin: 0; }
-.hero-mark {
-  flex: none;
-  width: clamp(46px, 9vw, 68px);
-  aspect-ratio: 1;
-  /* Text colour, not the accent: that is the cream the mark is drawn in on the
-     game splash screens, and it keeps the mark readable on paper too. */
-  background: var(--ink);
-  -webkit-mask: url("../brand/logo-mark.png") center / contain no-repeat;
-  mask: url("../brand/logo-mark.png") center / contain no-repeat;
-}
-.masthead nav { display: flex; gap: 18px; font-size: 15px; flex: none; }
-.masthead .wordmark { min-width: 0; white-space: nowrap; }
-.masthead nav a { color: var(--muted); text-decoration: none; }
-.masthead nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+/* Partner band */
+.partner .wrap { border-radius: 32px; padding: 56px; background: var(--accent); color: var(--accent-ink); display: flex; align-items: center; justify-content: space-between; gap: 32px; position: relative; overflow: hidden; }
+.partner .wrap::after { content: ""; position: absolute; right: -80px; top: -80px; width: 320px; height: 320px; background: url("/assets/brand/logo-mark.png") center / contain no-repeat; opacity: .12; }
+.partner h2 { font-size: clamp(28px, 3.4vw, 40px); }
+.partner p { margin: 10px 0 0; opacity: .85; max-width: 52ch; }
+.partner .btn { background: var(--accent-ink); color: var(--accent); border: 0; flex-shrink: 0; }
 
-/* --- hero -------------------------------------------------------------- */
+/* Footer */
+footer { padding: 72px 0 48px; margin-top: 96px; border-top: 1px solid var(--line); }
+footer .wrap { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 32px; }
+footer h4 { font: 700 12px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 16px; }
+footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 15px; }
+footer ul a:hover { color: var(--accent); }
+footer .small { color: var(--muted); font-size: 14px; margin-top: 14px; white-space: nowrap; }
+.legal { margin-top: 48px; color: var(--muted); font-size: 13px; }
 
-.hero { padding: 72px 0 56px; }
-.eyebrow {
-  margin: 0 0 18px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-h1 {
-  font-family: var(--display);
-  font-variation-settings: "SOFT" 30, "WONK" 1, "opsz" 120;
-  font-weight: 600;
-  font-size: clamp(40px, 9vw, 68px);
-  line-height: 1.03;
-  letter-spacing: -.025em;
-  margin: 0 0 20px;
-}
-.lede { margin: 0; max-width: 46ch; font-size: clamp(18px, 2.4vw, 21px); color: var(--muted); }
-
-/* --- section headings -------------------------------------------------- */
-
-.rule {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin: 0 0 28px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.rule::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-
-/* --- game plates ------------------------------------------------------- */
-
-.games { display: grid; gap: 14px; padding-bottom: 8px; }
-
-.plate {
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: 20px;
-  align-items: start;
-  padding: 20px;
-  background: var(--raised);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  text-decoration: none;
-  transition: transform .25s cubic-bezier(.2, .7, .3, 1), border-color .25s, box-shadow .25s;
-}
-.plate:hover { transform: translateY(-3px); border-color: var(--accent); }
-.plate img { width: 76px; height: 76px; border-radius: 19px; border: 1px solid var(--line); }
-.plate-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 8px; }
-.plate-top .chip { margin: 0; }
-.go { display: flex; color: var(--accent); transition: transform .25s cubic-bezier(.2, .7, .3, 1); }
-.plate:hover .go { transform: translateX(4px); }
-.plate h2 {
-  font-family: var(--display);
-  font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 36;
-  font-weight: 600;
-  font-size: 24px;
-  line-height: 1.2;
-  letter-spacing: -.015em;
-  margin: 2px 0 6px;
-}
-.plate p { margin: 0; color: var(--muted); font-size: 16px; }
-
-.chip {
-  display: inline-block;
-  margin: 0 0 10px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
-
-/* --- press kit --------------------------------------------------------- */
-
-.back { display: inline-block; margin: 28px 0 0; color: var(--muted); font-size: 15px; text-decoration: none; }
-.back::before { content: "\2190  "; }
-.back:hover { color: var(--ink); }
-
-.kit-head { display: grid; grid-template-columns: 104px 1fr; gap: 24px; align-items: start; padding: 40px 0 36px; }
-.kit-head img { width: 104px; height: 104px; border-radius: 26px; border: 1px solid var(--line); box-shadow: var(--shadow); }
-.kit-head h1 { font-size: clamp(32px, 7vw, 46px); margin-bottom: 12px; }
-.kit-head p { margin: 0; color: var(--muted); max-width: 42ch; }
-
-.feature { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin: 0 0 48px; }
-
-section { margin: 0 0 48px; }
-
-.facts { width: 100%; border-collapse: collapse; font-size: 15px; }
-.facts th, .facts td { text-align: left; vertical-align: top; padding: 11px 0; border-bottom: 1px solid var(--line); }
-.facts th { width: 38%; font-weight: 400; color: var(--muted); padding-right: 16px; }
-.facts code { font-size: 14px; }
-
-/* A rail rather than a grid: phone screenshots are tall, and six of them in a
-   grid would push everything else off the page. */
-.rail {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  padding-bottom: 14px;
-  margin: 0 calc(var(--gutter) * -1);
-  padding-inline: var(--gutter);
-  scroll-snap-type: x mandatory;
-  /* The rail bleeds to the screen edge and pads itself back to the text column.
-     Without a matching scroll-padding the snap points ignore that padding, so
-     scrolling to the start parks the first shot against the bare edge, out of
-     line with everything above it. */
-  scroll-padding-inline: var(--gutter);
-}
-/* The platform scrollbar is a wide grey trough with stepper arrows on Windows,
-   which sits badly under the screenshots. Chromium only honours
-   ::-webkit-scrollbar while `scrollbar-width` is unset, so the standard
-   properties are kept for the engines that have no pseudo-element. */
-@supports not selector(::-webkit-scrollbar) {
-  .rail { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
-}
-.rail::-webkit-scrollbar { height: 8px; }
-.rail::-webkit-scrollbar-track { background: transparent; }
-.rail::-webkit-scrollbar-thumb {
-  background: var(--line);
-  border-radius: 999px;
-  transition: background .2s;
-}
-.rail:hover::-webkit-scrollbar-thumb { background: var(--muted); }
-.rail::-webkit-scrollbar-thumb:active { background: var(--accent); }
-.rail img {
-  flex: 0 0 auto;
-  width: 168px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  scroll-snap-align: start;
-}
-
-.copy { max-width: var(--measure); }
-.copy h3 {
-  font-family: var(--display);
-  font-variation-settings: "SOFT" 20, "opsz" 24;
-  font-weight: 600;
-  font-size: 18px;
-  letter-spacing: .01em;
-  margin: 28px 0 8px;
-}
-.copy p { margin: 0 0 14px; }
-.copy ul { margin: 0 0 14px; padding-left: 20px; color: var(--muted); }
-
-.actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.btn {
-  display: inline-block;
-  padding: 11px 18px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--raised);
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: border-color .2s, transform .2s;
-}
-.btn:hover { border-color: var(--accent); transform: translateY(-1px); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
-.btn.primary:hover { filter: brightness(1.08); }
-.note { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
-
-/* --- long-form documents (privacy, terms) ------------------------------ */
-
-.doc { padding-bottom: 16px; }
-.doc > header { border-bottom: 1px solid var(--line); padding: 0 0 26px; margin: 44px 0 34px; }
-.doc > header h1 { font-size: clamp(32px, 6.5vw, 46px); margin: 0 0 12px; }
-.doc .meta { margin: 0; color: var(--muted); font-size: 14px; }
-.doc h2 {
-  font-family: var(--display);
-  font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 36;
-  font-weight: 600;
-  font-size: 25px;
-  line-height: 1.25;
-  letter-spacing: -.015em;
-  margin: 44px 0 12px;
-}
-.doc h3 {
-  font-family: var(--display);
-  font-variation-settings: "SOFT" 20, "opsz" 24;
-  font-weight: 600;
-  font-size: 18px;
-  margin: 30px 0 8px;
-}
-.doc p, .doc li { max-width: var(--measure); }
-.doc p { margin: 0 0 16px; }
-.doc ul { padding-left: 20px; }
-.doc li { margin: 6px 0; }
-.doc a { color: var(--accent); text-underline-offset: 2px; }
-.doc table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 18px 0 24px;
-  font-size: 15px;
-  display: block;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
-}
-.doc th, .doc td { text-align: left; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-.doc th { font-weight: 600; white-space: nowrap; }
-.doc code { background: var(--code-bg); padding: 1px 6px; border-radius: 4px; font-size: 14px; }
-
-/* --- footer ------------------------------------------------------------ */
-
-footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 28px 0 56px; }
-.footer-links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; font-size: 15px; margin: 0 0 14px; }
-.footer-links a { color: var(--muted); text-decoration: none; }
-.footer-links a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-
-/* Pushed to the far end of the row, so the two links stay left and the control
-   that moves the page sits on its own side. Styled as a link like its
-   neighbours, not as a button. */
-.to-top { margin-left: auto; }
-/* Kept out of the flex flow so the hover underline runs the way it does on the
-   plain links beside it, rather than stretching across the icon gap. */
-.to-top svg { vertical-align: -2px; margin-left: 6px; }
-.colophon { margin: 0; font-size: 14px; color: var(--muted); }
-
-/* --- entrance ---------------------------------------------------------- */
-
-.rise { animation: rise .7s cubic-bezier(.2, .7, .3, 1) backwards; }
-.rise:nth-child(2) { animation-delay: .07s; }
-.rise:nth-child(3) { animation-delay: .14s; }
-.rise:nth-child(4) { animation-delay: .21s; }
-@keyframes rise {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: .001ms !important;
-    animation-delay: 0ms !important;
-    transition-duration: .001ms !important;
-  }
-}
-
-@media (max-width: 640px) {
-  /* Keep the masthead on one line at phone width: the wordmark and the three
-     links both shrink rather than letting the nav wrap under the logo. */
-  .masthead { gap: 10px; padding-top: 22px; }
-  .wordmark { font-size: 16px; gap: 8px; }
-  .wordmark::before { width: 19px; height: 19px; }
-  .masthead nav { gap: 11px; font-size: 13px; }
-}
-
-/* Narrower than a 360 px phone the name and the three links start to collide.
-   The mark alone carries the link home; the text stays in the DOM, so the
-   accessible name is unchanged. */
-@media (max-width: 352px) {
-  .wordmark { font-size: 0; }
-  .wordmark::before { width: 22px; height: 22px; }
-}
-
-@media (max-width: 540px) {
-  .hero { padding: 48px 0 40px; }
-  .plate { grid-template-columns: 60px 1fr; gap: 16px; padding: 16px; }
-  .plate img { width: 60px; height: 60px; border-radius: 15px; }
-  .plate h2 { font-size: 21px; }
-  .kit-head { grid-template-columns: 1fr; gap: 18px; padding-top: 30px; }
-  .kit-head img { width: 84px; height: 84px; border-radius: 21px; }
-  .facts th { width: 44%; }
-}
-
-/* --- game card (modal on the home page, and /games/<slug>/) ---------------
-   Built by tools/build_games.py from tools/games.json. Short on purpose: who
-   the game is, a video frame, two lines about it and the store link. */
-.card-head { display: grid; grid-template-columns: 72px 1fr; gap: 18px; align-items: center; margin: 0 0 20px; }
-.card-head img { width: 72px; height: 72px; border-radius: 18px; border: 1px solid var(--line); box-shadow: var(--shadow); }
-.card-head .chip { margin: 0 0 6px; }
-.card-head h1, .card-head h2 {
-  font-family: var(--display);
-  font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 48;
-  font-weight: 600;
-  font-size: clamp(26px, 5vw, 34px);
-  line-height: 1.1;
-  letter-spacing: -.02em;
-  margin: 0;
-}
-.card-meta { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-.card-about { margin: 18px 0 20px; max-width: var(--measure); }
-.media {
-  position: relative;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--code-bg);
-}
-.media img, .media video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
-.media.feature-art { aspect-ratio: 1024 / 500; }
-/* Gameplay is captured on a phone, 9:16: shown upright like the phone it came from. */
-.media.gameplay { aspect-ratio: 9 / 16; width: min(100%, 280px); margin: 0 auto; background: #000; }
-.media.gameplay video { object-fit: contain; }
-.card-body.has-video .card-about { margin-top: 18px; }
+/* Game card: the same body in the home page modal and on /games/<slug>/ (tools/build_games.py card()) */
+.game-card .card-head { display: grid; grid-template-columns: 76px 1fr; gap: 18px; align-items: center; margin: 0 0 24px; }
+.game-card .card-head img { width: 76px; height: 76px; border-radius: 20px; box-shadow: var(--shadow); }
+.game-card .card-head .meta { margin-bottom: 10px; }
+.game-card .card-head h1, .game-card .card-head h2 { font-size: clamp(28px, 4vw, 38px); line-height: 1.05; }
+.game-card .media { position: relative; border-radius: 20px; overflow: hidden; background: var(--sunk); border: 1px solid var(--line); }
+.game-card .media img, .game-card .media video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+.game-card .media.feature-art { aspect-ratio: 1024 / 500; }
+.game-card .media.gameplay { aspect-ratio: 9 / 16; width: min(100%, 280px); margin: 0 auto; background: #000; border-radius: 28px; border: 6px solid #0d0c0a; }
+.game-card .media.gameplay video { object-fit: contain; }
+.game-card .card-about { margin: 20px 0; font-size: 17px; }
+.game-card .card-points { list-style: none; margin: 0 0 24px; padding: 18px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+.game-card .card-points li { position: relative; padding-left: 22px; font-size: 15px; line-height: 1.45; color: var(--muted); }
+.game-card .card-points li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.game-card .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0; }
+.play.disabled { background: transparent; color: var(--muted); border: 1px solid var(--line); cursor: not-allowed; pointer-events: none; }
+.game-card .note { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
 @media (min-width: 600px) {
-  .card-body.has-video { display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: start; }
-  .card-body.has-video .media.gameplay { width: 100%; }
-  .card-body.has-video .card-about { margin-top: 0; }
+  .game-card .card-body.has-video { display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: stretch; }
+  .game-card .card-body.has-video .media.gameplay { width: 100%; }
+  .game-card .card-body.has-video .card-about { margin-top: 0; }
+  .game-card .card-body.has-video .card-text { display: flex; flex-direction: column; }
+  .game-card .card-body.has-video .actions { margin-top: auto; }
 }
-.game-page { padding: 32px 0 8px; }
 
-.game-modal {
-  width: min(620px, calc(100vw - 2 * var(--gutter)));
-  max-height: calc(100dvh - 32px);
-  padding: 26px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: var(--raised);
-  color: var(--ink);
-  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .55);
-  overflow: auto;
-}
-.game-modal::backdrop { background: rgba(14, 12, 10, .55); backdrop-filter: blur(3px); }
+/* Game modal: clicking a game card on the home page opens its card here */
+.game-modal { width: min(680px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 32px; border: 1px solid var(--line); border-radius: 28px; background: var(--raised); color: var(--ink); box-shadow: 0 32px 80px -24px rgba(0,0,0,.6); overflow: auto; overscroll-behavior: contain; }
+.game-modal::backdrop { background: rgba(14, 12, 10, .6); backdrop-filter: blur(6px); }
 .game-modal[open] { animation: modal-in .28s cubic-bezier(.2, .7, .3, 1); }
-.game-modal .note { margin-bottom: 0; }
-.game-modal .actions { margin-bottom: 0; }
-.game-modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--paper);
-  color: var(--muted);
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-}
-.game-modal-close:hover { color: var(--ink); border-color: var(--accent); }
-.game-modal .card-head { padding-right: 36px; }
 @keyframes modal-in { from { opacity: 0; transform: translateY(14px) scale(.98); } }
-@media (max-width: 480px) {
-  .game-modal { padding: 20px; }
-  .card-head { grid-template-columns: 60px 1fr; gap: 14px; }
-  .card-head img { width: 60px; height: 60px; border-radius: 15px; }
-}
-@media (prefers-reduced-motion: reduce) { .game-modal[open] { animation: none; } }
-/* While a game card is open the page behind it stays still: no scrolling under
-   the modal, and the modal's own scroll never chains to the page. The stable
-   gutter keeps the page from jumping sideways when its scrollbar goes away. */
-html { scrollbar-gutter: stable; }
 html:has(.game-modal[open]) { overflow: hidden; }
-.game-modal { overscroll-behavior: contain; }
-/* A store the game is not on yet: shown, greyed out, not a link. */
-.btn.disabled { color: var(--muted); opacity: .55; cursor: not-allowed; pointer-events: none; }
-/* Two or three points under the blurb, so the text side holds its own beside the tall clip. */
-.card-points { list-style: none; margin: 0 0 22px; padding: 16px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; }
-.card-points li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.45; color: var(--muted); }
-.card-points li::before {
-  content: ""; position: absolute; left: 2px; top: .55em;
-  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+.game-modal .card-head { padding-right: 40px; }
+.game-modal-close { position: absolute; top: 18px; right: 18px; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; }
+.game-modal-close:hover { color: var(--ink); border-color: var(--accent); }
+
+/* Game page (/games/<slug>/): the card on its own panel */
+.page-main { width: min(880px, 100% - 2 * var(--gutter)); margin: 40px auto 0; }
+.back { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 600; font-size: 15px; margin-bottom: 20px; }
+.back:hover { color: var(--ink); }
+.page-card { padding: 40px; border-radius: 28px; border: 1px solid var(--line); background: var(--raised); box-shadow: var(--shadow); }
+
+/* Legal pages (privacy, terms) */
+.doc { width: min(780px, 100% - 2 * var(--gutter)); margin: 0 auto; }
+.doc > header { padding: 64px 0 28px; margin-bottom: 36px; border-bottom: 1px solid var(--line); }
+.doc > header h1 { font-size: clamp(36px, 5vw, 56px); line-height: 1.02; margin: 0 0 14px; }
+.doc .meta { color: var(--muted); font-size: 14px; margin: 0; }
+.doc h2 { font-size: 26px; line-height: 1.2; margin: 48px 0 12px; }
+.doc h3 { font-size: 19px; margin: 30px 0 8px; }
+.doc p { margin: 0 0 16px; }
+.doc ul { padding-left: 20px; margin: 0 0 16px; }
+.doc li { margin: 6px 0; }
+.doc p a, .doc li a, .doc td a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.doc table { width: 100%; border-collapse: collapse; margin: 18px 0 24px; font-size: 15px; display: block; overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+.doc th, .doc td { text-align: left; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.doc th { font-weight: 700; white-space: nowrap; }
+.doc code { background: var(--sunk); padding: 1px 6px; border-radius: 4px; font-size: 14px; }
+
+@media (max-width: 980px) {
+  .hero .wrap, .studio .wrap { grid-template-columns: 1fr; }
+  .showcase { margin-top: 24px; }
+  .partner .wrap { flex-direction: column; align-items: flex-start; padding: 40px; }
 }
-@media (min-width: 600px) {
-  /* Beside the clip the text runs the clip's full height: the store buttons sit level with its bottom edge. */
-  .card-body.has-video { align-items: stretch; }
-  .card-body.has-video .card-text { display: flex; flex-direction: column; }
-  .card-body.has-video .actions { margin-top: auto; }
+@media (max-width: 640px) {
+  .nav .brand span { display: none; }
+  .game-modal { padding: 22px; border-radius: 22px; }
+  .game-card .card-head { grid-template-columns: 60px 1fr; gap: 14px; }
+  .game-card .card-head img { width: 60px; height: 60px; border-radius: 16px; }
+  .page-card { padding: 22px; border-radius: 22px; }
+  .nav nav { gap: 18px; font-size: 14px; }
+  .nav nav a:not(.btn) { padding: 12px 0; }
+  .nav .btn { padding: 9px 14px; }
+  .hero { padding-top: 48px; }
+  .stats { gap: 24px; }
+  .live-grid { grid-template-columns: 1fr; }
+  .more-head { flex-direction: column; gap: 4px; margin-top: 48px; }
+  .more-row { grid-auto-columns: 78%; }
+  .float { width: 64px; height: 64px; border-radius: 16px; }
+  .float.a, .float.c { left: -24px; } .float.b { right: -24px; }
+  .phone { width: 240px; }
+  .section-head { flex-direction: column; align-items: start; }
+  .partner .wrap { padding: 32px 24px; }
+  footer .wrap { grid-template-columns: 1fr 1fr; }
+  footer .wrap > div:first-child { grid-column: 1 / -1; }
+  footer ul { gap: 2px; }
+  footer .small { white-space: normal; }
+  footer ul a { display: block; padding: 10px 0; }
 }
+@media (prefers-reduced-motion: reduce) { .float, .game-modal[open] { animation: none; } * { transition: none !important; } }

@@ -3,11 +3,12 @@
 One source for every game, so the home page (stats, the featured highlights, the scrolling
 row of the other games, footer links) and the page at /games/<slug>/ never drift apart. Clicking a game card on the home page opens
 that game in a modal (the same card as its page); the link still works without script. The
-home page is styled by assets/css/home.css, the game pages by assets/css/site.css. Edit
+whole site uses assets/css/site.css. The header and footer of every page come from here too
+(index, privacy and terms between HEADER and FOOTER markers). Edit
 games.json, then run:
 
     python tools/build_games.py
-    python tools/stamp_css.py      # only when a stylesheet in assets/css/ changed
+    python tools/stamp_css.py      # always after this: the build writes unstamped links
 
 games.json fields: slug, name, store_name, package, live (true = Google Play button and
 "Maintained" on its page; false = "In development"), featured (true = one of the big
@@ -35,10 +36,6 @@ def e(text: str) -> str:
     return html.escape(text, quote=True)
 
 
-def chip(g: dict) -> str:
-    return "Maintained" if g["live"] else "In development"
-
-
 def media(g: dict) -> str:
     """The gameplay video (9:16, muted, looping) when there is one, else the plain feature art."""
     slug = g["slug"]
@@ -63,12 +60,12 @@ def card(g: dict, heading: str) -> str:
     layout = "card-body has-video" if g.get("video") else "card-body"
     points = "".join(f"<li>{e(p)}</li>" for p in g.get("highlights", []))
     points = f'<ul class="card-points">{points}</ul>' if points else ""
+    chip_html = '<span class="chip on">Live</span>' if g["live"] else '<span class="chip">In development</span>'
     return f"""<div class="card-head">
-      <img src="/assets/games/{g['slug']}/icon.webp" alt="{e(g['name'])} app icon" width="72" height="72">
+      <img src="/assets/games/{g['slug']}/icon.webp" alt="{e(g['name'])} app icon" width="76" height="76">
       <div>
-        <span class="chip">{chip(g)}</span>
+        <div class="meta">{chip_html}{e(g['genre'])}<span class="sep" aria-hidden="true"></span>Android</div>
         <{heading}>{e(g['name'])}</{heading}>
-        <p class="card-meta">{e(g['genre'])} · Android</p>
       </div>
     </div>
     <div class="{layout}">
@@ -77,8 +74,8 @@ def card(g: dict, heading: str) -> str:
         <p class="card-about">{e(g['about'])}</p>
         {points}
         <p class="actions">
-          <a class="btn primary" href="{play_url}" rel="noopener">Google Play</a>
-          <span class="btn disabled" aria-disabled="true" title="Coming later">App Store</span>
+          <a class="play" href="{play_url}" rel="noopener">{PLAY_ICON}Get it on Google Play</a>
+          <span class="play disabled" aria-disabled="true">App Store soon</span>
         </p>
         {note}
       </div>
@@ -167,12 +164,6 @@ def more_cards() -> str:
     return "\n".join(out)
 
 
-def foot_games() -> str:
-    links = [f'<li><a href="/games/{g["slug"]}/">{e(g["name"])}</a></li>' for g in live_games()]
-    links.append('<li><a href="#games">All games</a></li>')
-    return "\n".join("      " + link for link in links)
-
-
 MODAL_SCRIPT = """<script>
 (() => {
   const dialog = document.getElementById("game-modal");
@@ -210,7 +201,7 @@ def modal() -> str:
     )
     return f"""<dialog class="game-modal" id="game-modal" aria-label="Game details">
   <button class="game-modal-close" type="button" aria-label="Close">&times;</button>
-  <div class="game-modal-body"></div>
+  <div class="game-modal-body game-card"></div>
 </dialog>
 {templates}
 {MODAL_SCRIPT}"""
@@ -220,12 +211,46 @@ def replace_block(text: str, name: str, content: str) -> str:
     pattern = re.compile(rf"(<!-- {name}:START -->\n).*?([ \t]*<!-- {name}:END -->)", re.S)
     new, n = pattern.subn(lambda m: m.group(1) + content.rstrip("\n") + "\n" + m.group(2), text)
     if n != 1:
-        raise SystemExit(f"index.html: marker {name} not found")
+        raise SystemExit(f"marker {name} not found")
     return new
 
 
-def page(g: dict, shell_head: str, foot: str) -> str:
-    head = shell_head
+def site_header() -> str:
+    """The sticky header on every page."""
+    return """<header class="nav" id="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Afterhours Studio home"><img src="/assets/brand/icon-180.png" alt="" width="34" height="34"><span>Afterhours Studio</span></a>
+    <nav>
+      <a href="/#games">Games</a>
+      <a href="/#studio">Studio</a>
+      <a href="/#partner">Partners</a>
+      <a class="btn primary" href="mailto:support@aftergamelab.com">Contact</a>
+    </nav>
+  </div>
+</header>"""
+
+
+def site_footer() -> str:
+    """The footer on every page; its Games column lists the live games."""
+    games = [f'<li><a href="/games/{g["slug"]}/">{e(g["name"])}</a></li>' for g in live_games()]
+    games.append('<li><a href="/#games">All games</a></li>')
+    games_html = "".join(games)
+    return f"""<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="/"><img src="/assets/brand/icon-180.png" alt="" width="34" height="34">Afterhours Studio</a>
+      <p class="small">Mobile games for Android, with iOS to follow.</p>
+    </div>
+    <div><h4>Games</h4><ul>{games_html}</ul></div>
+    <div><h4>Studio</h4><ul><li><a href="/#studio">About</a></li><li><a href="mailto:support@aftergamelab.com">Contact</a></li><li><a href="https://github.com/Afterhours-Studio" rel="noopener">GitHub</a></li></ul></div>
+    <div><h4>Legal</h4><ul><li><a href="/privacy/">Privacy Policy</a></li><li><a href="/terms/">Terms of Service</a></li><li><a href="/app-ads.txt">app-ads.txt</a></li></ul></div>
+  </div>
+  <p class="wrap legal">&copy; 2026 Afterhours Studio. All rights reserved.</p>
+</footer>"""
+
+
+def page(g: dict) -> str:
+    head = PAGE_HEAD
     for old, new in {
         "__TITLE__": e(f"{g['name']} - Afterhours Studio"),
         "__DESC__": e(f"{g['name']} by Afterhours Studio: {g['line']}"),
@@ -235,16 +260,20 @@ def page(g: dict, shell_head: str, foot: str) -> str:
     }.items():
         head = head.replace(old, new)
     return f"""{head}
-<main class="shell">
+{site_header()}
 
-  <a class="back" href="/#games">All games</a>
-
-  <article class="game-page rise">
+<main class="page-main">
+  <a class="back" href="/#games"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10H5M9.5 5.5 5 10l4.5 4.5"/></svg>All games</a>
+  <article class="game-card page-card">
     {card(g, "h1")}
   </article>
-
 </main>
-{foot}"""
+
+{site_footer()}
+
+</body>
+</html>
+"""
 
 
 PAGE_HEAD = """<!doctype html>
@@ -266,31 +295,10 @@ PAGE_HEAD = """<!doctype html>
 <link rel="preload" href="/assets/fonts/karla-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
-<body>
+<body>""".replace("SITE", SITE)
 
-<header class="shell masthead" id="top">
-  <a class="wordmark" href="/">Afterhours Studio</a>
-  <nav>
-    <a href="/#games">Games</a>
-    <a href="/privacy/">Privacy</a>
-    <a href="/terms/">Terms</a>
-  </nav>
-</header>
-""".replace("SITE", SITE)
-
-
-PAGE_FOOT = """<footer class="shell">
-  <p class="footer-links">
-    <a href="mailto:support@aftergamelab.com">Contact</a>
-    <a href="https://github.com/Afterhours-Studio" rel="noopener">GitHub</a>
-    <a class="to-top" href="#top">Back to top<svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 16V5M4.5 10.5 10 5l5.5 5.5"/></svg></a>
-  </p>
-  <p class="colophon">Afterhours Studio. Mobile games for Android, with iOS to follow.</p>
-</footer>
-
-</body>
-</html>
-"""
+# Hand-written pages that take the shared header and footer between markers.
+SHELL_PAGES = ("index.html", "privacy/index.html", "terms/index.html")
 
 
 def main() -> None:
@@ -299,15 +307,20 @@ def main() -> None:
     index = replace_block(index, "STATS", stats())
     index = replace_block(index, "FEATURED", featured_cards())
     index = replace_block(index, "MORE", more_cards())
-    index = replace_block(index, "FOOTGAMES", foot_games())
     index = replace_block(index, "MODAL", modal())
     index_path.write_text(index, encoding="utf-8", newline="")
 
-    foot = PAGE_FOOT
+    for rel in SHELL_PAGES:
+        path = ROOT / rel
+        text = path.read_text(encoding="utf-8")
+        text = replace_block(text, "HEADER", site_header())
+        text = replace_block(text, "FOOTER", site_footer())
+        path.write_text(text, encoding="utf-8", newline="")
+
     for g in GAMES:
         out = ROOT / "games" / g["slug"] / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(page(g, PAGE_HEAD, foot), encoding="utf-8", newline="")
+        out.write_text(page(g), encoding="utf-8", newline="")
     print(f"built {len(GAMES)} games")
 
 
