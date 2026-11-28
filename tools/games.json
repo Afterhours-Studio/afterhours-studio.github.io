@@ -20,7 +20,7 @@
     "name": "Sheep Loop",
     "store_name": "Sheep Loop: Flock Sort Puzzle",
     "package": "com.afterhours.sheeploop",
-    "live": false,
+    "live": true,
     "genre": "Puzzle",
     "line": "Guide colourful sheep around the loop and sort them into matching pens.",
     "about": "Tap a sheep and it joins the flock on the loop. Fill each pen with its own colour to send the flock home, but the loop only has room for so many sheep at once.",
@@ -29,7 +29,8 @@
       "Colour pens that change the plan mid-level",
       "Short levels, easy to pick up anywhere"
     ],
-    "video": "/assets/games/sheep-loop/gameplay.mp4"
+    "video": "/assets/games/sheep-loop/gameplay.mp4",
+    "featured": true
   },
   {
     "slug": "purlfect-pixels",
@@ -70,7 +71,6 @@
     "store_name": "Capybara Onsen: Cozy Idle",
     "package": "com.afterhours.cpbronsen",
     "live": true,
-    "featured": true,
     "genre": "Casual",
     "line": "Soak cute capybaras and grow a relaxing hot spring onsen.",
     "about": "Capybaras love a hot soak. Let them relax, earn coins while they bathe and turn a small pool into a hot spring resort. It keeps earning while the game is closed.",
